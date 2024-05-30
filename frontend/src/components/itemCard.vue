@@ -34,16 +34,16 @@
           style="font-size: 16px; flex: 1"
           type="success"
           @click="openDialog('add')"
-          >+</van-button
-        >
+          ><van-icon name="plus"
+        /></van-button>
         <van-button
           plain
           size="small"
           style="margin-left: 12px; font-size: 16px; flex: 1"
           type="danger"
           @click="openDialog('sub')"
-          >-</van-button
-        >
+          ><van-icon name="minus"
+        /></van-button>
       </div>
     </a-card>
   </div>
