@@ -1,10 +1,28 @@
 <template>
   <div id="app-base-db">
+    <div>
+      <a-card hoverable style="width: 200px;border-radius: 15%;">
+        <div>
+          <a-button style="background-color: #F50;color: white;
+          width: 150px;font-weight: bold;font-size: medium;">18</a-button>
+        </div>
+        <div>
+          <a-input v-model:value="shengxiao" disabled addon-before="生肖" />
+          <a-input v-model:value="sum"  @click="openDetail" addon-before="总计" />
+          <div style="margin-top: 10px;">
+            <a-button type="primary" @click="onSubmit">加数</a-button>
+            <a-button style="margin-left: 21px;" type="error" @click="onSubmit">减数</a-button>
+          </div>
+
+        </div>
+
+      </a-card>
+    </div>
     <div class="one-block-1">
       <span>
         1. sqlite本地数据库
       </span>
-    </div>  
+    </div>
     <div class="one-block-2">
       <a-row>
         <a-col :span="8">
@@ -22,7 +40,7 @@
       <span>
         2. 数据目录
       </span>
-    </div>  
+    </div>
     <div class="one-block-2">
       <a-row>
         <a-col :span="12">
@@ -39,26 +57,26 @@
           <a-button @click="openDir">
             打开目录
           </a-button>
-        </a-col>        
+        </a-col>
       </a-row>
-    </div>     
+    </div>
     <div class="one-block-1">
       <span>
         3. 测试数据
       </span>
-    </div>  
+    </div>
     <div class="one-block-2">
       <a-row>
         <a-col :span="24">
           {{ all_list }}
         </a-col>
       </a-row>
-    </div>    
+    </div>
     <div class="one-block-1">
       <span>
         4. 添加数据
       </span>
-    </div>  
+    </div>
     <div class="one-block-2">
       <a-row>
         <a-col :span="6">
@@ -82,7 +100,7 @@
       <span>
         4. 获取数据
       </span>
-    </div>  
+    </div>
     <div class="one-block-2">
       <a-row>
         <a-col :span="6">
@@ -110,7 +128,7 @@
       <span>
         5. 修改数据
       </span>
-    </div>  
+    </div>
     <div class="one-block-2">
       <a-row>
         <a-col :span="6">
@@ -134,7 +152,7 @@
       <span>
         6. 删除数据
       </span>
-    </div>  
+    </div>
     <div class="one-block-2">
       <a-row>
         <a-col :span="6">
@@ -152,7 +170,7 @@
           </a-button>
         </a-col>
       </a-row>
-    </div>       
+    </div>
   </div>
 </template>
 <script>
@@ -170,10 +188,12 @@ export default {
       update_age: 31,
       delete_name: '李四',
       all_list: ['空'],
-      data_dir: ''
+      data_dir: '',
+      sum: 100,
+      shengxiao: 'zhu'
     };
   },
-  mounted () {
+  mounted() {
     this.init();
   },
   methods: {
@@ -189,9 +209,9 @@ export default {
 
         this.data_dir = res.result;
         this.getAllTestData();
-      }) 
+      })
     },
-    getAllTestData () {
+    getAllTestData() {
       const params = {
         action: 'all',
       }
@@ -200,7 +220,7 @@ export default {
           return false;
         }
         this.all_list = res.all_list;
-      }) 
+      })
     },
     selectDir() {
       ipc.invoke(ipcApiRoute.selectFolder, '').then(r => {
@@ -211,10 +231,10 @@ export default {
     },
     openDir() {
       console.log('dd:', this.data_dir);
-      ipc.invoke(ipcApiRoute.openDirectory, {id: this.data_dir}).then(res => {
+      ipc.invoke(ipcApiRoute.openDirectory, { id: this.data_dir }).then(res => {
         //
       })
-    },    
+    },
     modifyDataDir(dir) {
       const params = {
         action: 'setDataDir',
@@ -222,9 +242,9 @@ export default {
       }
       ipc.invoke(ipcApiRoute.sqlitedbOperation, params).then(res => {
         this.all_list = res.all_list;
-      }) 
+      })
     },
-    sqlitedbOperation (ac) {
+    sqlitedbOperation(ac) {
       const params = {
         action: ac,
         info: {
@@ -254,8 +274,11 @@ export default {
         }
         this.all_list = res.all_list;
         this.$message.success(`success`);
-      }) 
+      })
     },
+    openDetail() {
+      console.log('打开详情')
+    }
   }
 };
 </script>
@@ -264,10 +287,12 @@ export default {
   padding: 0px 10px;
   text-align: left;
   width: 100%;
+
   .one-block-1 {
     font-size: 16px;
     padding-top: 10px;
   }
+
   .one-block-2 {
     padding-top: 10px;
   }
