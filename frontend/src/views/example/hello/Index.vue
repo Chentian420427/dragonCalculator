@@ -5,16 +5,35 @@
         <span>20240101期总数：</span>
         <span>999.99</span>
       </div>
-      <div>
-        <van-button
-          class="header-button"
-          plain
-          type="primary"
-          @click="openBatch"
+      <div style="display: flex; align-items: center; margin: 28px 0px">
+        <van-button class="header-button" type="primary" @click="openBatch"
           >批量加数</van-button
         >
-        <van-button class="header-button" plain type="danger" @click="deleteAll"
+        <van-button class="header-button" type="danger" @click="deleteAll"
           >清空本期数据</van-button
+        >
+        <van-button class="header-button" type="primary" @click="deleteAll"
+          >单数</van-button
+        >
+        <van-button class="header-button" type="primary" @click="deleteAll"
+          >双数</van-button
+        >
+        <a-select
+          class="header-button"
+          v-model:value="shengxiaoArr"
+          :options="shengxiaoOptions"
+          mode="multiple"
+          size="large"
+          placeholder="Please select"
+          style="width: 200px"
+          @popupScroll="popupScroll"
+        >
+        </a-select>
+        <van-button
+          class="header-button"
+          type="primary"
+          @click="shengxiaoSearch"
+          >生肖查询</van-button
         >
       </div>
     </div>
@@ -220,6 +239,15 @@ export default {
       amount: 88,
       amountText: "1.5.9.35各10",
       dateStr: "20240101",
+      shengxiaoArr: [],
+      shengxiaoOptions: [
+        {
+          value: "猪",
+        },
+        {
+          value: "龙",
+        },
+      ],
     };
   },
   mounted() {
@@ -332,6 +360,7 @@ export default {
           // on cancel
         });
     },
+    shengxiaoSearch() {},
   },
 };
 </script>
