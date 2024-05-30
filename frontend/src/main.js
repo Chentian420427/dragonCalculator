@@ -1,5 +1,7 @@
 import * as AntIcon from '@ant-design/icons-vue';
 import Antd from 'ant-design-vue';
+import Vant from 'vant'
+import 'vant/lib/index.css'
 import { createApp } from 'vue';
 import App from './App.vue';
 import './assets/global.less';
@@ -23,4 +25,4 @@ for (const i in AntIcon) {
   }
 }
 
-app.use(Antd).use(Router).mount('#app')
+app.use(Vant).use(Antd).use(Router).mount('#app')
