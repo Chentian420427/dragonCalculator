@@ -2,78 +2,38 @@
   <div id="app-base-db">
     <div class="header">
       <div class="header-title">
-        <span>20240101期总数：</span>
-        <span>999.99</span>
+        <span>{{ period }}期总数：</span>
+        <span>{{ allSum }}</span>
       </div>
       <div style="display: flex; align-items: center; margin: 28px 0px">
-        <van-button class="header-button" type="primary" @click="openBatch"
-          >批量加数</van-button
-        >
-        <van-button class="header-button" type="danger" @click="deleteAll"
-          >清空本期数据</van-button
-        >
-        <van-button class="header-button" type="primary" @click="deleteAll"
-          >单数</van-button
-        >
-        <van-button class="header-button" type="primary" @click="deleteAll"
-          >双数</van-button
-        >
-        <a-select
-          class="header-button"
-          v-model:value="shengxiaoArr"
-          :options="shengxiaoOptions"
-          mode="multiple"
-          size="large"
-          placeholder="Please select"
-          style="width: 200px"
-          @popupScroll="popupScroll"
-        >
+        <van-button class="header-button" type="primary" @click="openBatch">批量加数</van-button>
+        <van-button class="header-button" type="danger" @click="deleteAll">清空本期数据</van-button>
+        <van-button class="header-button" type="primary" @click="deleteAll">单数</van-button>
+        <van-button class="header-button" type="primary" @click="deleteAll">双数</van-button>
+        <a-select class="header-button" v-model:value="shengxiaoArr" :options="shengxiaoOptions" mode="multiple"
+          size="large" placeholder="Please select" style="width: 200px" @popupScroll="popupScroll">
         </a-select>
-        <van-button
-          class="header-button"
-          type="primary"
-          @click="shengxiaoSearch"
-          >生肖查询</van-button
-        >
+        <van-button class="header-button" type="primary" @click="shengxiaoSearch">生肖查询</van-button>
       </div>
     </div>
     <div class="card-warpper">
-      <itemCard
-        v-for="(item, index) in 49"
-        :key="index"
-        :ballNum="ballNum"
-        :sum="sum"
-        :shengxiao="shengxiao"
-        @openDialog="openDialog"
-        @openDetail="openDetail"
-      />
+      <itemCard v-for="(item, index) in allList" :key="index" :ballNum="item.ballNum" :sum="item.sum"
+        :shengxiao="item.zodiac" @openDialog="openDialog" @openDetail="openDetail" />
     </div>
-    <van-dialog v-model:show="showAddSub" title="操作" show-cancel-button>
+    <van-dialog v-model:show="showAddSub" title="操作" show-cancel-button @confirm="amountConfirm">
       <div class="operation-box">
-        <a-input v-model:value="amount" addon-before="金额" />
+        <a-input autofocus="true" ref="inputAmountRef" v-model:value="operationBall.amount" type="number"
+          addon-before="金额" />
       </div>
     </van-dialog>
-    <van-dialog
-      width="800"
-      v-model:show="showDetail"
-      title="详情"
-      show-cancel-button
-    >
+    <van-dialog width="800" v-model:show="showDetail" title="详情" show-cancel-button>
       <div class="operation-box">
         <span>1+236+365+335</span>
       </div>
     </van-dialog>
-    <van-dialog
-      v-model:show="showBatch"
-      title="智能批量添加"
-      show-cancel-button
-      width="800"
-    >
+    <van-dialog v-model:show="showBatch" title="智能批量添加" show-cancel-button width="800">
       <div style="padding: 24px">
-        <a-textarea
-          v-model:value="amountText"
-          placeholder="例如：10.25.33.11.22各15"
-        />
+        <a-textarea v-model:value="amountText" placeholder="例如：10.25.33.11.22各15" />
       </div>
     </van-dialog>
 
@@ -93,11 +53,7 @@
     <div class="one-block-2">
       <a-row>
         <a-col :span="12">
-          <a-input
-            v-model="data_dir"
-            :value="data_dir"
-            addon-before="数据目录"
-          />
+          <a-input v-model="data_dir" :value="data_dir" addon-before="数据目录" />
         </a-col>
         <a-col :span="2"> </a-col>
         <a-col :span="5">
@@ -142,11 +98,7 @@
     <div class="one-block-2">
       <a-row>
         <a-col :span="6">
-          <a-input
-            v-model="search_age"
-            :value="search_age"
-            addon-before="年龄"
-          />
+          <a-input v-model="search_age" :value="search_age" addon-before="年龄" />
         </a-col>
         <a-col :span="3"> </a-col>
         <a-col :span="6"> </a-col>
@@ -167,19 +119,11 @@
     <div class="one-block-2">
       <a-row>
         <a-col :span="6">
-          <a-input
-            v-model="update_name"
-            :value="update_name"
-            addon-before="姓名(条件)"
-          />
+          <a-input v-model="update_name" :value="update_name" addon-before="姓名(条件)" />
         </a-col>
         <a-col :span="3"> </a-col>
         <a-col :span="6">
-          <a-input
-            v-model="update_age"
-            :value="update_age"
-            addon-before="年龄"
-          />
+          <a-input v-model="update_age" :value="update_age" addon-before="年龄" />
         </a-col>
         <a-col :span="3"> </a-col>
         <a-col :span="6">
@@ -193,11 +137,7 @@
     <div class="one-block-2">
       <a-row>
         <a-col :span="6">
-          <a-input
-            v-model="delete_name"
-            :value="delete_name"
-            addon-before="姓名"
-          />
+          <a-input v-model="delete_name" :value="delete_name" addon-before="姓名" />
         </a-col>
         <a-col :span="3"> </a-col>
         <a-col :span="6"> </a-col>
@@ -236,9 +176,9 @@ export default {
       showAddSub: false,
       showDetail: false,
       showBatch: false,
-      amount: 88,
+      amount: '',
       amountText: "1.5.9.35各10",
-      dateStr: "20240101",
+      period: "20240531",
       shengxiaoArr: [],
       shengxiaoOptions: [
         {
@@ -248,6 +188,13 @@ export default {
           value: "龙",
         },
       ],
+      allSum: 0,
+      allList: [],
+      operationBall: {
+        ballNum: '',
+        amount: '',
+        operation: ''
+      }
     };
   },
   mounted() {
@@ -265,7 +212,8 @@ export default {
         }
 
         this.data_dir = res.result;
-        this.getAllTestData();
+        console.log('xxxxxx')
+        this.queryAllSum();
       });
     },
     getAllTestData() {
@@ -335,13 +283,38 @@ export default {
         this.$message.success(`success`);
       });
     },
+    queryAllSum() {
+      const params = {
+        action: 'queryAllSum',
+        ballDTO: {},
+        period: this.period,
+        ballType: this.ballType,
+        zodiac: this.zodiac
+      }
+      ipc.invoke(ipcApiRoute.ballSqliteOperation, params).then((res) => {
+        console.log("res:", res);
+        this.allList = res.all_list;
+        this.allSum = 0;
+        this.allList.forEach(item => {
+          this.allSum = parseInt(this.allSum) + parseInt(item.sum);
+        })
+      });
+    },
     openDetail(ballNum) {
       this.showDetail = true;
       console.log("打开详情");
     },
     openDialog(param) {
       console.log(param);
+      this.operationBall.ballNum = param.ballNum
+      this.operationBall.operation = param.operation
+
       this.showAddSub = true;
+      this.$nextTick(() => {
+        console.log(this.$refs.inputAmountRef)
+        this.$refs.inputAmountRef.focus();
+      })
+
     },
     openBatch() {
       this.showBatch = true;
@@ -353,14 +326,45 @@ export default {
         message: "是否确认删除本期数据？删除后不可恢复数据",
       })
         .then(() => {
-          // on confirm
-          alert("ssss");
+          const params = {
+            action: 'deleteByPeriod',
+            ballDTO: {
+              ballNum: this.operationBall.ballNum,
+              amount: this.operationBall.amount,
+            },
+            period: this.period
+          }
+
+          ipc.invoke(ipcApiRoute.ballSqliteOperation, params).then((res) => {
+            this.queryAllSum();
+          });
         })
         .catch(() => {
           // on cancel
         });
     },
-    shengxiaoSearch() {},
+    amountConfirm() {
+      console.log('amountConfirm')
+      if (this.operationBall.operation === 'sub') {
+        this.operationBall.amount = -this.operationBall.amount
+      }
+      const params = {
+        action: 'operationAmount',
+        ballDTO: {
+          ballNum: this.operationBall.ballNum,
+          amount: this.operationBall.amount,
+          period: this.period
+        },
+
+      }
+
+      ipc.invoke(ipcApiRoute.ballSqliteOperation, params).then((res) => {
+        this.queryAllSum();
+        this.operationBall.amount = ''
+      });
+
+    },
+    shengxiaoSearch() { },
   },
 };
 </script>
@@ -369,13 +373,16 @@ export default {
   padding: 0px 10px;
   text-align: left;
   width: 100%;
+
   .card-warpper {
     display: flex;
     flex-wrap: wrap;
   }
+
   .header-title {
     text-align: center;
     font-size: 28px;
+
     span:last-of-type {
       color: red;
     }

@@ -6,6 +6,7 @@
 const ipcApiRoute = {
   test: 'controller.example.test',
   sqlitedbOperation: 'controller.framework.sqlitedbOperation',
+  ballSqliteOperation: 'controller.framework.ballSqliteOperation',
   selectFolder: 'controller.os.selectFolder'
 }
 

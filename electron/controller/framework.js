@@ -31,7 +31,7 @@ class FrameworkController extends Controller {
 
   /**
    * json数据库操作
-   */   
+   */
   async jsondbOperation(args) {
     const { action, info, delete_name, update_name, update_age, search_age, data_dir } = args;
 
@@ -40,26 +40,26 @@ class FrameworkController extends Controller {
       result: null,
       all_list: []
     };
-    
+
     switch (action) {
-      case 'add' :
+      case 'add':
         data.result = await Services.get('database.jsondb').addTestData(info);
         break;
-      case 'del' :
+      case 'del':
         data.result = await Services.get('database.jsondb').delTestData(delete_name);
         break;
-      case 'update' :
+      case 'update':
         data.result = await Services.get('database.jsondb').updateTestData(update_name, update_age);
         break;
-      case 'get' :
+      case 'get':
         data.result = await Services.get('database.jsondb').getTestData(search_age);
         break;
-      case 'getDataDir' :
+      case 'getDataDir':
         data.result = await Services.get('database.jsondb').getDataDir();
         break;
-      case 'setDataDir' :
+      case 'setDataDir':
         data.result = await Services.get('database.jsondb').setCustomDataDir(data_dir);
-        break;          
+        break;
     }
 
     data.all_list = await Services.get('database.jsondb').getAllTestData();
@@ -69,7 +69,7 @@ class FrameworkController extends Controller {
 
   /**
    * sqlite数据库操作
-   */   
+   */
   async sqlitedbOperation(args) {
     const { action, info, delete_name, update_name, update_age, search_age, data_dir } = args;
 
@@ -90,30 +90,116 @@ class FrameworkController extends Controller {
     }
 
     switch (action) {
-      case 'add' :
+      case 'add':
         data.result = await Services.get('database.sqlitedb').addTestDataSqlite(info);;
         break;
-      case 'del' :
+      case 'del':
         data.result = await Services.get('database.sqlitedb').delTestDataSqlite(delete_name);;
         break;
-      case 'update' :
+      case 'update':
         data.result = await Services.get('database.sqlitedb').updateTestDataSqlite(update_name, update_age);
         break;
-      case 'get' :
+      case 'get':
         data.result = await Services.get('database.sqlitedb').getTestDataSqlite(search_age);
         break;
-      case 'getDataDir' :
+      case 'getDataDir':
         data.result = await Services.get('database.sqlitedb').getDataDir();
         break;
-      case 'setDataDir' :
+      case 'setDataDir':
         data.result = await Services.get('database.sqlitedb').setCustomDataDir(data_dir);
-        break;            
+        break;
     }
 
     data.all_list = await Services.get('database.sqlitedb').getAllTestDataSqlite();
 
     return data;
-  }  
+  }
+
+  async ballSqliteOperation(args) {
+    const { action, ballDTO, ballType, period, zodiac } = args
+    let data = {
+      action,
+      result: null,
+      all_list: [],
+      code: 0
+    };
+    let ballList = [];
+    let ballNumStr = '';
+    let ballSumList = [];
+    switch (action) {
+      case 'queryAllSum':
+        ballList = await Services.get('database.sqlitedb').queryAllBall();
+
+        ballNumStr = ballList.map(item => item.ball_num).join(',');
+        console.log('ballNumstr', ballNumStr);
+        ballSumList = await Services.get('database.sqlitedb').querySumByBallNumAndPeriod(period, ballNumStr);
+
+        ballList.forEach(ball => {
+          let sum = 0
+          const ballSum = ballSumList.find(ballSum => ballSum.ball_num === ball.ball_num)
+          if (ballSum) {
+            sum = ballSum.sum
+          }
+          const ballData = {
+            ballNum: ball.ball_num,
+            ballType: ball.ball_type,
+            color: ball.color,
+            zodiac: ball.zodiac,
+            sum: sum
+          }
+          data.all_list.push(ballData)
+        });
+        break;
+      case 'deleteByPeriod':
+        data.result = await Services.get('database.sqlitedb').deleteByPeriod(period);
+        break;
+      case 'operationAmount':
+        data.result = await Services.get('database.sqlitedb').operationAmount(ballDTO);
+        break;
+      case 'querySumByBallType':
+        ballList = await Services.get('database.sqlitedb').queryBallByBallType(ballType);
+        ballNumStr = ballList.map(item => item.ball_num).join(',');
+        ballSumList = await Services.get('database.sqlitedb').querySumByBallNumAndPeriod(period, ballNumStr);
+        ballList.forEach(ball => {
+          const sum = 0
+          const ballSum = ballSumList.find(ballSum => ballSum.ball_num === ball.ball_num)
+          if (ballSum) {
+            sum = ballSum.sum
+          }
+          const ballData = {
+            ballNum: ball.ball_num,
+            ballType: ball.ball_type,
+            color: ball.color,
+            zodiac: ball.zodiac,
+            sum: sum
+          }
+          data.all_list.push(ballData)
+        });
+        break;
+      case 'querySumByZodiac':
+        ballList = await Services.get('database.sqlitedb').queryBallByZodiac(zodiac);
+        ballNumStr = ballList.map(item => item.ball_num).join(',');
+        ballSumList = await Services.get('database.sqlitedb').querySumByBallNumAndPeriod(period, ballNumStr);
+        ballList.forEach(ball => {
+          const sum = 0
+          const ballSum = ballSumList.find(ballSum => ballSum.ball_num === ball.ball_num)
+          if (ballSum) {
+            sum = ballSum.sum
+          }
+          const ballData = {
+            ballNum: ball.ball_num,
+            ballType: ball.ball_type,
+            color: ball.color,
+            zodiac: ball.zodiac,
+            sum: sum
+          }
+          data.all_list.push(ballData)
+        });
+        break;
+    }
+
+    return data;
+  }
 
   /**
    * 调用其它程序（exe、bash等可执行程序）
@@ -135,12 +221,12 @@ class FrameworkController extends Controller {
     exec(cmdStr);
 
     return true;
-  }  
-  
+  }
+
   /**
    * 检查是否有新版本
    */
-  checkForUpdater() { 
+  checkForUpdater() {
     Addon.get('autoUpdater').checkUpdate();
     return;
   }
@@ -155,7 +241,7 @@ class FrameworkController extends Controller {
 
   /**
    * 检测http服务是否开启
-   */ 
+   */
   async checkHttpServer() {
     const httpServerConfig = Conf.getValue('httpServer');
     const url = httpServerConfig.protocol + httpServerConfig.host + ':' + httpServerConfig.port;
@@ -169,7 +255,7 @@ class FrameworkController extends Controller {
 
   /**
    * 一个http请求访问此方法
-   */ 
+   */
   async doHttpRequest() {
     const { CoreApp } = EE;
     // http方法
@@ -192,42 +278,42 @@ class FrameworkController extends Controller {
     }
     const dir = electronApp.getPath(body.id);
     shell.openPath(dir);
-    
+
     return true;
-  } 
- 
+  }
+
   /**
    * 一个socket io请求访问此方法
-   */ 
+   */
   async doSocketRequest(args) {
     if (!args.id) {
       return false;
     }
     const dir = electronApp.getPath(args.id);
     shell.openPath(dir);
-    
+
     return true;
   }
-  
+
   /**
    * 异步消息类型
-   */ 
+   */
   async ipcInvokeMsg(args, event) {
     let timeNow = dayjs().format('YYYY-MM-DD HH:mm:ss');
     const data = args + ' - ' + timeNow;
-    
+
     return data;
-  }  
+  }
 
   /**
    * 同步消息类型
-   */ 
+   */
   async ipcSendSyncMsg(args) {
     let timeNow = dayjs().format('YYYY-MM-DD HH:mm:ss');
     const data = args + ' - ' + timeNow;
-    
+
     return data;
-  }  
+  }
 
   /**
    * 双向异步通信
@@ -243,19 +329,19 @@ class FrameworkController extends Controller {
    * 上传文件
    * 不建议使用，请使用electron的api来获取文件的本机路径，然后读取并上传
    * 使用http的files属性，实际上多余拷贝一次文件
-   */  
+   */
   async uploadFile() {
     const { CoreApp } = EE;
     let tmpDir = Ps.getLogDir();
     const files = CoreApp.request.files;
     let file = files.file;
-    
+
     let tmpFilePath = path.join(tmpDir, file.originalFilename);
     try {
       let tmpFile = fs.readFileSync(file.filepath);
       fs.writeFileSync(tmpFilePath, tmpFile);
     } finally {
-      await fs.unlink(file.filepath, function(){});
+      await fs.unlink(file.filepath, function () { });
     }
     const fileStream = fs.createReadStream(tmpFilePath);
     const uploadRes = await Services.get('framework').uploadFileToSMMS(fileStream);
@@ -265,7 +351,7 @@ class FrameworkController extends Controller {
 
   /**
    * 启动java项目
-   */ 
+   */
   async startJavaServer() {
     let data = {
       code: 0,
@@ -288,7 +374,7 @@ class FrameworkController extends Controller {
 
   /**
    * 关闭java项目
-   */ 
+   */
   async closeJavaServer() {
     let data = {
       code: 0,
@@ -308,38 +394,38 @@ class FrameworkController extends Controller {
 
   /**
    * java运行状态
-   */ 
+   */
   async runStatus() {
     let data = {
       code: 0,
       msg: '',
       flag: false
     }
-    const flag =  await Addon.get('javaServer').check();
+    const flag = await Addon.get('javaServer').check();
     //Log.info("[FrameworkController:runStatus] flag-----------"+flag);
     data.flag = flag;
-    
+
     return data;
-  }  
+  }
 
   /**
    * 任务
-   */ 
+   */
   someJob(args, event) {
     let jobId = args.id;
     let action = args.action;
-    
+
     let result;
     switch (action) {
       case 'create':
         result = Services.get('framework').doJob(jobId, action, event);
-        break;       
+        break;
       case 'close':
         Services.get('framework').doJob(jobId, action, event);
         break;
-      default:  
+      default:
     }
-    
+
     let data = {
       jobId,
       action,
@@ -350,7 +436,7 @@ class FrameworkController extends Controller {
 
   /**
    * 创建任务池
-   */ 
+   */
   async createPool(args, event) {
     let num = args.number;
     Services.get('framework').doCreatePool(num, event);
@@ -363,19 +449,19 @@ class FrameworkController extends Controller {
 
   /**
    * 通过进程池执行任务
-   */ 
+   */
   someJobByPool(args, event) {
     let jobId = args.id;
     let action = args.action;
-    
+
     let result;
     switch (action) {
       case 'run':
         result = Services.get('framework').doJobByPool(jobId, action, event);
         break;
-      default:  
+      default:
     }
-    
+
     let data = {
       jobId,
       action,
@@ -386,10 +472,10 @@ class FrameworkController extends Controller {
 
   /**
    * 测试接口
-   */ 
+   */
   hello(args) {
     Log.info('hello ', args);
-  }   
+  }
 }
 
 FrameworkController.toString = () => '[class FrameworkController]';
