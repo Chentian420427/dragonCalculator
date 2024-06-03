@@ -5,15 +5,28 @@
         <span>{{ period }}期总数：</span>
         <span>{{ allSum }}</span>
       </div>
+      <div>
+        <a-row>
+          <a-col :span="6">
+            <a-statistic title="单数" v-model:value="danSum" />
+          </a-col>
+          <a-col :span="6">
+            <a-statistic title="双数" v-model:value="shuangSum" />
+          </a-col>
+          <a-col :span="12">
+            <div style="display: flex;align-items: center;">
+              <a-select class="header-button" v-model:value="shengxiaoArr" :options="shengxiaoOptions" mode="multiple"
+                size="large" placeholder="请选择需要统计的生肖" style="width: 200px;margin-right: 22px;"
+                @popupScroll="popupScroll" @change="shengxiaoChange">
+              </a-select>
+              <a-statistic title="生肖" v-model:value="shengxiaoSum" />
+            </div>
+          </a-col>
+        </a-row>
+      </div>
       <div style="display: flex; align-items: center; margin: 28px 0px">
         <van-button class="header-button" type="primary" @click="openBatch">批量加数</van-button>
         <van-button class="header-button" type="danger" @click="deleteAll">清空本期数据</van-button>
-        <van-button class="header-button" type="primary" @click="deleteAll">单数</van-button>
-        <van-button class="header-button" type="primary" @click="deleteAll">双数</van-button>
-        <a-select class="header-button" v-model:value="shengxiaoArr" :options="shengxiaoOptions" mode="multiple"
-          size="large" placeholder="Please select" style="width: 200px" @popupScroll="popupScroll">
-        </a-select>
-        <van-button class="header-button" type="primary" @click="shengxiaoSearch">生肖查询</van-button>
       </div>
     </div>
     <div class="card-warpper">
@@ -28,7 +41,7 @@
     </van-dialog>
     <van-dialog width="800" v-model:show="showDetail" title="详情" show-cancel-button>
       <div class="operation-box">
-        <span>1+236+365+335</span>
+        <span>{{ amountStr }}</span>
       </div>
     </van-dialog>
     <van-dialog v-model:show="showBatch" title="智能批量添加" show-cancel-button width="800">
@@ -182,7 +195,7 @@ export default {
       shengxiaoArr: [],
       shengxiaoOptions: [
         {
-          value: "猪",
+          value: "狗",
         },
         {
           value: "龙",
@@ -194,7 +207,12 @@ export default {
         ballNum: '',
         amount: '',
         operation: ''
-      }
+      },
+      detailList: [],
+      amountStr: '',
+      danSum: 0,
+      shuangSum: 0,
+      shengxiaoSum: 0
     };
   },
   mounted() {
@@ -292,17 +310,69 @@ export default {
         zodiac: this.zodiac
       }
       ipc.invoke(ipcApiRoute.ballSqliteOperation, params).then((res) => {
-        console.log("res:", res);
         this.allList = res.all_list;
         this.allSum = 0;
+        let danSum = 0;
+        let shuangSum = 0;
+        let shengxiaoSum = 0;
         this.allList.forEach(item => {
           this.allSum = parseInt(this.allSum) + parseInt(item.sum);
+
+          if (item.ballType === 1) {
+            danSum = parseInt(danSum) + parseInt(item.sum)
+          }
+          if (item.ballType === 2) {
+            shuangSum = parseInt(shuangSum) + parseInt(item.sum)
+          }
+          if (this.shengxiaoArr.length > 0) {
+            this.shengxiaoArr.forEach(option => {
+              if (option === item.zodiac) {
+                shengxiaoSum = shengxiaoSum + item.sum
+              }
+
+            })
+          }
         })
+        this.danSum = danSum
+        this.shuangSum = shuangSum
+        this.shengxiaoSum = shengxiaoSum
       });
     },
-    openDetail(ballNum) {
+    shengxiaoChange() {
+      let shengxiaoSum = 0;
+      this.allList.forEach(item => {
+        if (this.shengxiaoArr.length > 0) {
+            this.shengxiaoArr.forEach(option => {
+              if (option === item.zodiac) {
+                shengxiaoSum = shengxiaoSum + item.sum
+              }
+
+            })
+          }
+      })
+      this.shengxiaoSum = shengxiaoSum
+    },
+    openDetail(ballNum, sum) {
+      const params = {
+        action: 'queryDetailByNum',
+        ballDTO: {
+          period: this.period,
+          ballNum: ballNum
+        }
+      }
+      ipc.invoke(ipcApiRoute.ballSqliteOperation, params).then((res) => {
+        this.detailList = res.all_list;
+        console.log(this.detailList.length)
+        if (this.detailList.length === 0) {
+          this.amountStr = '无';
+        } else {
+          this.amountStr = this.detailList.map(item => item.amount).join('+')
+          this.amountStr = this.amountStr + ' = ' + sum
+        }
+
+      });
+
       this.showDetail = true;
-      console.log("打开详情");
     },
     openDialog(param) {
       console.log(param);
@@ -365,6 +435,7 @@ export default {
 
     },
     shengxiaoSearch() { },
+
   },
 };
 </script>

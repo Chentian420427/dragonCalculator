@@ -134,7 +134,7 @@ class SqlitedbService extends Service {
   async queryDetailByNum(ballDTO) {
     await this.checkAndCreateTable();
 
-    const selectAllBallSum = this.demoSqliteDB.db.prepare(`SELECT * FROM ball_sum where ball_num=@ballNum`);
+    const selectAllBallSum = this.demoSqliteDB.db.prepare(`SELECT * FROM ball_sum where ball_num=@ballNum and period=@period`);
     const datas = selectAllBallSum.all(ballDTO);
     //  console.log("select users:", datas);
     return datas;

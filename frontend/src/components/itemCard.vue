@@ -74,7 +74,7 @@ export default {
       this.$emit("openDialog", param);
     },
     openDetail() {
-      this.$emit("openDetail", this.ballNum);
+      this.$emit("openDetail", this.ballNum, this.sum);
     },
   },
 };

@@ -196,6 +196,11 @@ class FrameworkController extends Controller {
           data.all_list.push(ballData)
         });
         break;
+      case 'queryDetailByNum':
+          
+        let detailList = await Services.get('database.sqlitedb').queryDetailByNum(ballDTO);
+        data.all_list = detailList
+        break;
     }
 
     return data;
