@@ -217,6 +217,7 @@ export default {
   },
   mounted() {
     this.init();
+    this.getMacAddress();
   },
   methods: {
     init() {
@@ -342,13 +343,13 @@ export default {
       let shengxiaoSum = 0;
       this.allList.forEach(item => {
         if (this.shengxiaoArr.length > 0) {
-            this.shengxiaoArr.forEach(option => {
-              if (option === item.zodiac) {
-                shengxiaoSum = shengxiaoSum + item.sum
-              }
+          this.shengxiaoArr.forEach(option => {
+            if (option === item.zodiac) {
+              shengxiaoSum = shengxiaoSum + item.sum
+            }
 
-            })
-          }
+          })
+        }
       })
       this.shengxiaoSum = shengxiaoSum
     },
@@ -412,6 +413,19 @@ export default {
         .catch(() => {
           // on cancel
         });
+    },
+    getMacAddress() {
+      const os = require('os');
+      let macAdress = ''
+      const interfaces = os.networkInterfaces();
+      for (const iface of Object.values(interfaces)) {
+        for (const config of iface) {
+          if (!config.internal && config.mac !== '00:00:00:00:00:00') {
+            macAdress = config.mac;
+          }
+        }
+      }
+      console.log(macAdress,'--------')
     },
     amountConfirm() {
       console.log('amountConfirm')
