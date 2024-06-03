@@ -60,31 +60,83 @@ class SqlitedbService extends Service {
     // 检查表是否存在
     const userTable = this.demoSqliteDB.db.prepare('SELECT * FROM sqlite_master WHERE type=?');
     const result = userTable.all('table');
-    
+
     if (result) {
-      if(!result.find(item => item.name === 'ball')) {
+      if (!result.find(item => item.name === 'ball')) {
         // 创建表
         const create_table_ball =
-        `CREATE TABLE ball (
+          `CREATE TABLE ball (
           ball_num INTEGER,
           color TEXT,
           ball_type INTEGER,
           zodiac TEXT,
           CONSTRAINT ball_PK PRIMARY KEY (ball_num)
           );`
-      this.demoSqliteDB.db.exec(create_table_ball);
+        this.demoSqliteDB.db.exec(create_table_ball);
+        let insertSql = `INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (1, 'red', 1, '龙');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (2, 'blue', 2, '兔');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (3, 'red', 1, '虎');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (4, 'red', 1, '龙');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (5, 'red', 1, '鼠');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (6, 'red', 1, '猪');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (7, 'red', 1, '狗');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (8, 'red', 1, '龙');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (9, 'red', 1, '猴');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (10, 'red', 1, '羊');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (11, 'red', 1, '马');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (12, 'red', 1, '蛇');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (13, 'red', 1, '龙');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (14, 'red', 1, '兔');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (15, 'red', 1, '龙');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (16, 'red', 1, '龙');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (17, 'red', 1, '鼠');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (18, 'red', 1, '猪');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (19, 'red', 1, '狗');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (20, 'red', 1, '龙');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (21, 'red', 1, '猴');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (22, 'red', 1, '羊');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (23, 'red', 1, '马');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (24, 'red', 1, '蛇');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (25, 'red', 1, '龙');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (26, 'red', 1, '龙');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (27, 'red', 1, '虎');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (28, 'red', 1, '龙');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (29, 'red', 1, '鼠');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (30, 'red', 1, '猪');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (31, 'red', 1, '狗');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (32, 'red', 1, '龙');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (33, 'red', 1, '猴');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (34, 'red', 1, '羊');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (35, 'red', 1, '马');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (36, 'red', 1, '蛇');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (37, 'red', 1, '龙');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (38, 'red', 1, '兔');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (39, 'red', 1, '虎');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (40, 'red', 1, '龙');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (41, 'red', 1, '鼠');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (42, 'red', 1, '猪');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (43, 'red', 1, '狗');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (44, 'red', 1, '龙');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (45, 'red', 1, '猴');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (46, 'red', 1, '羊');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (47, 'red', 1, '马');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (48, 'red', 1, '蛇');
+        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (49, 'red', 1, '龙');
+        `
+        let insertInit = this.demoSqliteDB.db.prepare(insertSql);
+        insertInit.run();
       }
-      if(!result.find(item => item.name === 'ball_sum')) {
+      if (!result.find(item => item.name === 'ball_sum')) {
         const create_table_ball_sum =
-        `CREATE TABLE ball_sum (
+          `CREATE TABLE ball_sum (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         ball_num INTEGER,
         amount NUMERIC
       , period INTEGER);`
         this.demoSqliteDB.db.exec(create_table_ball_sum);
       }
-      
-    } 
+
+    }
 
 
   }
