@@ -100,8 +100,6 @@ export default {
   },
   mounted() {
     this.init();
-    this.getMacAddress();
-    console.log(this.$route.query)
     this.period = this.$route.query.period
   },
   methods: {
@@ -255,19 +253,6 @@ export default {
           this.$message.success(`智能批量加数成功！`);
         });
       })
-    },
-    getMacAddress() {
-      const os = require('os');
-      let macAdress = ''
-      const interfaces = os.networkInterfaces();
-      for (const iface of Object.values(interfaces)) {
-        for (const config of iface) {
-          if (!config.internal && config.mac !== '00:00:00:00:00:00') {
-            macAdress = config.mac;
-          }
-        }
-      }
-      console.log(macAdress,'--------')
     },
     amountConfirm() {
       console.log('amountConfirm')
