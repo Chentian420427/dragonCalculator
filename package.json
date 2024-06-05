@@ -1,8 +1,9 @@
 {
   "name": "ee",
   "version": "3.11.0",
-  "description": "A fast, desktop software development framework",
+  "description": "计算器工具",
   "main": "main.js",
+  "shortcutName": "计算器工具",
   "scripts": {
     "dev": "ee-bin dev",
     "dev-frontend": "ee-bin dev --serve=frontend",
@@ -42,7 +43,7 @@
     "electron-egg",
     "ElectronEgg"
   ],
-  "author": "哆啦好梦, Inc <530353222@qq.com>",
+  "author": "Chentian",
   "license": "Apache",
   "devDependencies": {
     "@electron/rebuild": "^3.6.0",
