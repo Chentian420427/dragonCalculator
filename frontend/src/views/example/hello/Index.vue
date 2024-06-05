@@ -7,12 +7,23 @@
       </div>
       <div>
         <a-row>
-          <a-col :span="6">
+          <a-col :span="4">
             <a-statistic title="单数" v-model:value="danSum" />
           </a-col>
-          <a-col :span="6">
+          <a-col :span="4">
             <a-statistic title="双数" v-model:value="shuangSum" />
           </a-col>
+          <a-col :span="4">
+            <a-statistic title="红色" v-model:value="redSum" />
+          </a-col>
+          <a-col :span="4">
+            <a-statistic title="绿色" v-model:value="greenSum" />
+          </a-col>
+          <a-col :span="4">
+            <a-statistic title="蓝色" v-model:value="blueSum" />
+          </a-col>
+        </a-row>
+        <a-row style="margin-top: 24px;">
           <a-col :span="12">
             <div style="display: flex;align-items: center;">
               <a-select class="header-button" v-model:value="shengxiaoArr" :options="shengxiaoOptions" mode="multiple"
@@ -125,7 +136,10 @@ export default {
       amountStr: '',
       danSum: 0,
       shuangSum: 0,
-      shengxiaoSum: 0
+      shengxiaoSum: 0,
+      redSum: 0,
+      blueSum: 0,
+      greenSum: 0
     };
   },
   mounted() {
@@ -162,6 +176,9 @@ export default {
         let danSum = 0;
         let shuangSum = 0;
         let shengxiaoSum = 0;
+        let redSum = 0;
+        let greenSum = 0;
+        let blueSum = 0;
         this.allList.forEach(item => {
           this.allSum = parseInt(this.allSum) + parseInt(item.sum);
 
@@ -179,10 +196,22 @@ export default {
 
             })
           }
+          if (item.color === 'blue') {
+            blueSum = parseInt(blueSum) + parseInt(item.sum)
+          }
+          if (item.color === 'green') {
+            greenSum = parseInt(greenSum) + parseInt(item.sum)
+          }
+          if (item.color === 'red') {
+            redSum = parseInt(redSum) + parseInt(item.sum)
+          }
         })
         this.danSum = danSum
         this.shuangSum = shuangSum
         this.shengxiaoSum = shengxiaoSum
+        this.redSum = redSum
+        this.blueSum = blueSum
+        this.greenSum = greenSum
       });
     },
     shengxiaoChange() {
