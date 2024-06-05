@@ -3,13 +3,7 @@
     <a-card hoverable style="width: 200px; border-radius: 15%">
       <div>
         <a-button
-          style="
-            background-color: #f50;
-            color: white;
-            width: 150px;
-            font-weight: bold;
-            font-size: medium;
-          "
+          :style="getStyle()"
           @click="openDetail"
           >{{ ballNum }}</a-button
         >
@@ -64,6 +58,10 @@ export default {
       type: Number,
       default: 0,
     },
+    color: {
+      type: String,
+      default: '',
+    },
   },
   methods: {
     openDialog(operation) {
@@ -76,6 +74,23 @@ export default {
     openDetail() {
       this.$emit("openDetail", this.ballNum, this.sum);
     },
+    getStyle() {
+      let colorStyle = '#f50';
+      if(this.color === 'blue') {
+        colorStyle = '#1989fa'
+      }
+      if(this.color === 'green') {
+        colorStyle = '#07c160'
+      }
+
+      return {
+        'background-color': colorStyle,
+            'color': 'white',
+            'width': '150px',
+            'font-weight': 'bold',
+            'font-size': 'medium',
+      }
+    }
   },
 };
 </script>

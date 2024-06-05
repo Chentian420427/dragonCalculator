@@ -201,6 +201,10 @@ class FrameworkController extends Controller {
         let detailList = await Services.get('database.sqlitedb').queryDetailByNum(ballDTO);
         data.all_list = detailList
         break;
+      case 'initData':
+          
+        await Services.get('database.sqlitedb').checkAndCreateTable();
+        break;  
     }
 
     return data;

@@ -55,7 +55,7 @@ class SqlitedbService extends Service {
   /*
    * 检查并创建表 (ball,ball_sum表)
    */
-  async checkAndCreateTable(t) {
+  async checkAndCreateTable() {
 
     // 检查表是否存在
     const userTable = this.demoSqliteDB.db.prepare('SELECT * FROM sqlite_master WHERE type=?');

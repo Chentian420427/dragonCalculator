@@ -25,13 +25,13 @@
         </a-row>
       </div>
       <div style="display: flex; align-items: center; margin: 28px 0px">
-      <van-button class="header-button" type="primary" @click="returnInit">重新选择期数</van-button>
+        <van-button class="header-button" type="primary" @click="returnInit">重新选择期数</van-button>
         <van-button class="header-button" type="primary" @click="openBatch">批量加数</van-button>
         <van-button class="header-button" type="danger" @click="deleteAll">清空本期数据</van-button>
       </div>
     </div>
     <div class="card-warpper">
-      <itemCard v-for="(item, index) in allList" :key="index" :ballNum="item.ballNum" :sum="item.sum"
+      <itemCard v-for="(item, index) in allList" :key="index" :ballNum="item.ballNum" :sum="item.sum" :color="item.color"
         :shengxiao="item.zodiac" @openDialog="openDialog" @openDetail="openDetail" />
     </div>
     <van-dialog v-model:show="showAddSub" title="操作" show-cancel-button @confirm="amountConfirm">
@@ -50,7 +50,7 @@
         <a-textarea v-model:value="amountText" placeholder="例如：10.25.33.11.22各15" />
       </div>
     </van-dialog>
-    </div>
+  </div>
 
 </template>
 <script>
@@ -78,10 +78,40 @@ export default {
       shengxiaoArr: [],
       shengxiaoOptions: [
         {
+          value: "龙",
+        },
+        {
+          value: "兔",
+        },
+        {
+          value: "虎",
+        },
+        {
+          value: "牛",
+        },
+        {
+          value: "鼠",
+        },
+        {
+          value: "猪",
+        },
+        {
           value: "狗",
         },
         {
-          value: "龙",
+          value: "鸡",
+        },
+        {
+          value: "猴",
+        },
+        {
+          value: "羊",
+        },
+        {
+          value: "马",
+        },
+        {
+          value: "蛇",
         },
       ],
       allSum: 0,
@@ -183,7 +213,14 @@ export default {
         if (this.detailList.length === 0) {
           this.amountStr = '无';
         } else {
-          this.amountStr = this.detailList.map(item => item.amount).join('+')
+          this.amountStrArr = this.detailList.map(item => item.amount)
+          this.amountStrArr.forEach(amount => {
+            if (amount > 0) {
+              this.amountStr =  this.amountStr + amount + '+'
+            }else {
+              this.amountStr = this.amountStr.substring(0, this.amountStr.length -1) + amount
+            }
+          })
           this.amountStr = this.amountStr + ' = ' + sum
         }
 
@@ -207,7 +244,7 @@ export default {
       this.showBatch = true;
     },
     returnInit() {
-      this.$router.push({name:'Login'})
+      this.$router.push({ name: 'Login' })
     },
     deleteAll() {
       showConfirmDialog({
@@ -238,21 +275,21 @@ export default {
       let numArr = amountTextArr[0].split('.');
       numArr.forEach(num => {
         const params = {
-        action: 'operationAmount',
-        ballDTO: {
-          ballNum: num,
-          amount: amountTextArr[1],
-          period: this.period
-        },
+          action: 'operationAmount',
+          ballDTO: {
+            ballNum: num,
+            amount: amountTextArr[1],
+            period: this.period
+          },
 
-      }
+        }
 
         ipc.invoke(ipcApiRoute.ballSqliteOperation, params).then((res) => {
           this.queryAllSum();
-          this.amountText= ''
-          this.$message.success(`智能批量加数成功！`);
+          this.amountText = ''
         });
       })
+      this.$message.success(`智能批量加数成功！`);
     },
     amountConfirm() {
       console.log('amountConfirm')
