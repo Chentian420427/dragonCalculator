@@ -87,7 +87,8 @@
         <a-textarea v-model:value="amountText" placeholder="例如：10.25.33.11.22各15" />
       </div>
     </van-dialog>
-    <a-modal v-model:visible="showType" title="按类别加数" @ok="typeConfirm">
+    <a-modal v-model:visible="showType" title="按类别加数" @ok="typeConfirm" ok-text="确认"
+      cancel-text="取消">
       <div style="padding: 24px">
         <a-select class="header-button" v-model:value="addType" :options="typeOptions" size="large"
           placeholder="请选择需要添加的类别" style="width: 200px;margin-right: 22px;" @change="typeChange">
