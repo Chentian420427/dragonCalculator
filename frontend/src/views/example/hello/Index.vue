@@ -163,6 +163,12 @@ export default {
         },
       ],
       typeOptions: [
+      {
+          value: "单",
+        },
+        {
+          value: "双",
+        },
         {
           value: "红",
         },
@@ -326,9 +332,18 @@ export default {
       if (addType === '绿') {
         addType = 'green'
       }
+      if(addType === '单') {
+        addType = 1
+      }
+      if(addType === '双') {
+        addType = 2
+      }
       this.typeStr = this.allList.filter(item => item.zodiac === addType).map(item => item.ballNum).join(', ')
       if (this.typeStr.length === 0) {
         this.typeStr = this.allList.filter(item => item.color === addType).map(item => item.ballNum).join(', ')
+      }
+      if (this.typeStr.length === 0) {
+        this.typeStr = this.allList.filter(item => item.ballType === addType).map(item => item.ballNum).join(', ')
       }
     },
     openDetail(ballNum, sum) {
