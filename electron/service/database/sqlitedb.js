@@ -73,58 +73,17 @@ class SqlitedbService extends Service {
           CONSTRAINT ball_PK PRIMARY KEY (ball_num)
           );`
         this.demoSqliteDB.db.exec(create_table_ball);
-        let insertSql = `INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (1, 'red', 1, '龙');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (2, 'blue', 2, '兔');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (3, 'red', 1, '虎');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (4, 'red', 1, '龙');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (5, 'red', 1, '鼠');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (6, 'red', 1, '猪');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (7, 'red', 1, '狗');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (8, 'red', 1, '龙');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (9, 'red', 1, '猴');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (10, 'red', 1, '羊');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (11, 'red', 1, '马');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (12, 'red', 1, '蛇');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (13, 'red', 1, '龙');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (14, 'red', 1, '兔');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (15, 'red', 1, '龙');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (16, 'red', 1, '龙');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (17, 'red', 1, '鼠');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (18, 'red', 1, '猪');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (19, 'red', 1, '狗');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (20, 'red', 1, '龙');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (21, 'red', 1, '猴');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (22, 'red', 1, '羊');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (23, 'red', 1, '马');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (24, 'red', 1, '蛇');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (25, 'red', 1, '龙');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (26, 'red', 1, '龙');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (27, 'red', 1, '虎');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (28, 'red', 1, '龙');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (29, 'red', 1, '鼠');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (30, 'red', 1, '猪');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (31, 'red', 1, '狗');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (32, 'red', 1, '龙');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (33, 'red', 1, '猴');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (34, 'red', 1, '羊');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (35, 'red', 1, '马');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (36, 'red', 1, '蛇');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (37, 'red', 1, '龙');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (38, 'red', 1, '兔');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (39, 'red', 1, '虎');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (40, 'red', 1, '龙');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (41, 'red', 1, '鼠');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (42, 'red', 1, '猪');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (43, 'red', 1, '狗');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (44, 'red', 1, '龙');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (45, 'red', 1, '猴');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (46, 'red', 1, '羊');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (47, 'red', 1, '马');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (48, 'red', 1, '蛇');
-        INSERT INTO "ball" ("ball_num", "color", "ball_type", "zodiac") VALUES (49, 'red', 1, '龙');
-        `
-        let insertInit = this.demoSqliteDB.db.prepare(insertSql);
-        insertInit.run();
+        let insertSqlArr = ["INSERT INTO ball (ball_num,color,ball_type,zodiac) VALUES (1,'red',1,'龙'),(2,'red',2,'兔'),(3,'blue',1,'虎'),(4,'blue',2,'牛'),(5,'green',1,'鼠'),(6,'green',2,'猪'),(7,'red',1,'狗'),(8,'red',2,'鸡'),(9,'blue',1,'猴'),(10,'blue',2,'羊')",
+          "INSERT INTO ball (ball_num,color,ball_type,zodiac) VALUES (11,'green',1,'马'),(12,'red',2,'蛇'),(13,'red',1,'龙'),(14,'blue',2,'兔'),(15,'blue',1,'虎'),(16,'green',2,'牛'),(17,'green',1,'鼠'),(18,'red',2,'猪'),(19,'red',1,'狗'),(20,'blue',2,'鸡')",
+          "INSERT INTO ball (ball_num,color,ball_type,zodiac) VALUES (21,'green',1,'猴'),(22,'green',2,'羊'),(23,'red',1,'马'),(24,'red',2,'蛇'),(25,'blue',1,'龙'),(26,'blue',2,'兔'),(27,'green',1,'虎'),(28,'green',2,'牛'),(29,'red',1,'鼠'),(30,'red',2,'猪')",
+          "INSERT INTO ball (ball_num,color,ball_type,zodiac) VALUES (31,'blue',1,'狗'),(32,'green',2,'鸡'),(33,'green',1,'猴'),(34,'red',2,'羊'),(35,'red',1,'马'),(36,'blue',2,'蛇'),(37,'blue',1,'龙'),(38,'green',2,'兔'),(39,'green',1,'虎'),(40,'red',2,'牛')",
+          "INSERT INTO ball (ball_num,color,ball_type,zodiac) VALUES (41,'blue',1,'鼠'),(42,'blue',2,'猪'),(43,'green',1,'狗'),(44,'green',2,'鸡'),(45,'red',1,'猴'),(46,'red',2,'羊'),(47,'blue',1,'马'),(48,'blue',2,'蛇'),(49,'green',1,'龙')"];
+
+        insertSqlArr.forEach(sql => {
+          let insertInit = this.demoSqliteDB.db.prepare(sql);
+          insertInit.run();
+        })
+
       }
       if (!result.find(item => item.name === 'ball_sum')) {
         const create_table_ball_sum =

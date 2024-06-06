@@ -37,7 +37,7 @@
     "build-lp-64": "electron-builder --config=./electron/config/builder.json -l=pacman --x64",
     "test": "set DEBUG=* && electron . --env=local"
   },
-  "repository": "https://github.com/dromara/electron-egg.git",
+  "repository": "https://github.com/Chentian420427/dragonCalculator.git",
   "keywords": [
     "Electron",
     "electron-egg",
