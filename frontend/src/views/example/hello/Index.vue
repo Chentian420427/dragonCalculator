@@ -8,19 +8,39 @@
       <div>
         <a-row>
           <a-col :span="4">
-            <a-statistic title="单数" v-model:value="danSum" />
+            <a-statistic title="单数" v-model:value="danSum">
+              <template #suffix>
+                <span>/ {{ danSum * 47 }}</span>
+              </template>
+            </a-statistic>
           </a-col>
           <a-col :span="4">
-            <a-statistic title="双数" v-model:value="shuangSum" />
+            <a-statistic title="双数" v-model:value="shuangSum">
+              <template #suffix>
+                <span>/ {{ shuangSum * 47 }}</span>
+              </template>
+            </a-statistic>
           </a-col>
           <a-col :span="4">
-            <a-statistic title="红色" v-model:value="redSum" />
+            <a-statistic title="红色" v-model:value="redSum">
+              <template #suffix>
+                <span>/ {{ redSum * 47 }}</span>
+              </template>
+            </a-statistic>
           </a-col>
           <a-col :span="4">
-            <a-statistic title="绿色" v-model:value="greenSum" />
+            <a-statistic title="绿色" v-model:value="greenSum">
+              <template #suffix>
+                <span>/ {{ greenSum * 47 }}</span>
+              </template>
+            </a-statistic>
           </a-col>
           <a-col :span="4">
-            <a-statistic title="蓝色" v-model:value="blueSum" />
+            <a-statistic title="蓝色" v-model:value="blueSum">
+              <template #suffix>
+                <span>/ {{ blueSum * 47 }}</span>
+              </template>
+            </a-statistic>
           </a-col>
         </a-row>
         <a-row style="margin-top: 24px;">
@@ -28,22 +48,28 @@
             <div style="display: flex;align-items: center;">
               <a-select class="header-button" v-model:value="shengxiaoArr" :options="shengxiaoOptions" mode="multiple"
                 size="large" placeholder="请选择需要统计的生肖" style="width: 200px;margin-right: 22px;"
-                @popupScroll="popupScroll" @change="shengxiaoChange">
+                @change="shengxiaoChange">
               </a-select>
-              <a-statistic title="生肖" v-model:value="shengxiaoSum" />
+              <a-statistic title="生肖" v-model:value="shengxiaoSum">
+                <template #suffix>
+                  <span>/ {{ shengxiaoSum * 47 }}</span>
+                </template>
+              </a-statistic>
             </div>
           </a-col>
         </a-row>
       </div>
       <div style="display: flex; align-items: center; margin: 28px 0px">
         <van-button class="header-button" type="primary" @click="returnInit">重新选择期数</van-button>
-        <van-button class="header-button" type="primary" @click="openBatch">批量加数</van-button>
+        <van-button class="header-button" type="primary" @click="openBatch">智能加数</van-button>
+        <van-button class="header-button" type="primary" @click="openType">类别加数</van-button>
         <van-button class="header-button" type="danger" @click="deleteAll">清空本期数据</van-button>
+
       </div>
     </div>
     <div class="card-warpper">
-      <itemCard v-for="(item, index) in allList" :key="index" :ballNum="item.ballNum" :sum="item.sum" :color="item.color"
-        :shengxiao="item.zodiac" @openDialog="openDialog" @openDetail="openDetail" />
+      <itemCard v-for="(item, index) in allList" :key="index" :ballNum="item.ballNum" :sum="item.sum"
+        :color="item.color" :shengxiao="item.zodiac" @openDialog="openDialog" @openDetail="openDetail" />
     </div>
     <van-dialog v-model:show="showAddSub" title="操作" show-cancel-button @confirm="amountConfirm">
       <div class="operation-box">
@@ -61,6 +87,15 @@
         <a-textarea v-model:value="amountText" placeholder="例如：10.25.33.11.22各15" />
       </div>
     </van-dialog>
+    <a-modal v-model:visible="showType" title="按类别加数" @ok="typeConfirm">
+      <div style="padding: 24px">
+        <a-select class="header-button" v-model:value="addType" :options="typeOptions" size="large"
+          placeholder="请选择需要添加的类别" style="width: 200px;margin-right: 22px;" @change="typeChange">
+        </a-select>
+        <p style="margin-top: 24px;">{{ typeStr }}</p>
+        <a-input prefix="￥" v-model:value="typeAmount" style="width: 200px;" />
+      </div>
+    </a-modal>
   </div>
 
 </template>
@@ -83,11 +118,59 @@ export default {
       showAddSub: false,
       showDetail: false,
       showBatch: false,
+      showType: false,
       amount: '',
       amountText: "1.5.9.35各10",
       period: "",
       shengxiaoArr: [],
       shengxiaoOptions: [
+        {
+          value: "龙",
+        },
+        {
+          value: "兔",
+        },
+        {
+          value: "虎",
+        },
+        {
+          value: "牛",
+        },
+        {
+          value: "鼠",
+        },
+        {
+          value: "猪",
+        },
+        {
+          value: "狗",
+        },
+        {
+          value: "鸡",
+        },
+        {
+          value: "猴",
+        },
+        {
+          value: "羊",
+        },
+        {
+          value: "马",
+        },
+        {
+          value: "蛇",
+        },
+      ],
+      typeOptions: [
+        {
+          value: "红",
+        },
+        {
+          value: "绿",
+        },
+        {
+          value: "蓝",
+        },
         {
           value: "龙",
         },
@@ -139,7 +222,10 @@ export default {
       shengxiaoSum: 0,
       redSum: 0,
       blueSum: 0,
-      greenSum: 0
+      greenSum: 0,
+      typeStr: '',
+      addType: '',
+      typeAmount: ''
     };
   },
   mounted() {
@@ -228,6 +314,22 @@ export default {
       })
       this.shengxiaoSum = shengxiaoSum
     },
+    typeChange() {
+      let addType = this.addType
+      if (addType === '红') {
+        addType = 'red'
+      }
+      if (addType === '蓝') {
+        addType = 'blue'
+      }
+      if (addType === '绿') {
+        addType = 'green'
+      }
+      this.typeStr = this.allList.filter(item => item.zodiac === addType).map(item => item.ballNum).join(', ')
+      if (this.typeStr.length === 0) {
+        this.typeStr = this.allList.filter(item => item.color === addType).map(item => item.ballNum).join(', ')
+      }
+    },
     openDetail(ballNum, sum) {
       const params = {
         action: 'queryDetailByNum',
@@ -245,9 +347,9 @@ export default {
           this.amountStrArr = this.detailList.map(item => item.amount)
           this.amountStrArr.forEach(amount => {
             if (amount > 0) {
-              this.amountStr =  this.amountStr + amount + '+'
-            }else {
-              this.amountStr = this.amountStr.substring(0, this.amountStr.length -1) + amount
+              this.amountStr = this.amountStr + amount + '+'
+            } else {
+              this.amountStr = this.amountStr.substring(0, this.amountStr.length - 1) + amount
             }
           })
           this.amountStr = this.amountStr + ' = ' + sum
@@ -299,6 +401,9 @@ export default {
           // on cancel
         });
     },
+    openType() {
+      this.showType = true
+    },
     zhinengConfirm() {
       let amountTextArr = this.amountText.split('各');
       let numArr = amountTextArr[0].split('.');
@@ -341,6 +446,28 @@ export default {
         this.$message.success(`操作成功！`);
       });
 
+    },
+    typeConfirm() {
+      let ballNumArr = this.typeStr.split(', ')
+      ballNumArr.forEach(ballNum => {
+        const params = {
+          action: 'operationAmount',
+          ballDTO: {
+            ballNum: ballNum,
+            amount: this.typeAmount,
+            period: this.period
+          },
+
+        }
+
+        ipc.invoke(ipcApiRoute.ballSqliteOperation, params).then((res) => {
+          this.queryAllSum();
+          this.typeAmount = ''
+          this.addType = ''
+        });
+        
+      })
+      this.$message.success(`操作成功！`);
     },
     shengxiaoSearch() { },
 

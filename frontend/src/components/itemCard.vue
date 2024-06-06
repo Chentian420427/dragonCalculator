@@ -17,7 +17,7 @@
       <div class="flex-box">
         <van-tag plain type="primary" size="large">总计</van-tag>
         <span style="color: red; font-weight: bold">
-          {{ sum }}
+          {{ sum }} / {{ sum*47 }}
         </span>
       </div>
 

@@ -165,8 +165,8 @@ module.exports = (appInfo) => {
       macOS: false, 
       linux: false,
       options: {
-        provider: 'generic', 
-        url: 'http://kodo.qiniu.com/'
+        provider: 'github', 
+        url: 'https://github.com/Chentian420427/dragonCalculator'
       },
       force: false,
     }
