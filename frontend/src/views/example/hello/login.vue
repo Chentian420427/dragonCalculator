@@ -39,8 +39,7 @@ export default {
       }
       // 0c-9D-92-BC-14-BD 龙
       // 18-C0-4D-36-8C-21 WIN
-      let macArr = ['0c-9d-92-bc-14-bc', '18:c0:4d:36:8c:21', 'c8:89:f3:b9:14:40']
-      console.log(macAdress)
+      let macArr = ['0c:9d:92:bc:14:bd', '18:c0:4d:36:8c:21', 'c8:89:f3:b9:14:40']
       if(macArr.indexOf(macAdress) === -1) {
         this.isShow = false;
       } 

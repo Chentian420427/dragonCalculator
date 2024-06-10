@@ -5,7 +5,7 @@
         <span>{{ period }}期总数：</span>
         <span>{{ allSum }}</span>
       </div>
-      <div>
+      <!-- <div>
         <a-row>
           <a-col :span="4">
             <a-statistic title="单数" v-model:value="danSum">
@@ -58,7 +58,7 @@
             </div>
           </a-col>
         </a-row>
-      </div>
+      </div> -->
       <div style="display: flex; align-items: center; margin: 28px 0px">
         <van-button class="header-button" type="primary" @click="returnInit">重新选择期数</van-button>
         <van-button class="header-button" type="primary" @click="openBatch">智能加数</van-button>
@@ -121,7 +121,7 @@ export default {
       showBatch: false,
       showType: false,
       amount: '',
-      amountText: "1.5.9.35各10",
+      amountText: "",
       period: "",
       shengxiaoArr: [],
       shengxiaoOptions: [
@@ -422,7 +422,46 @@ export default {
     },
     zhinengConfirm() {
       let amountTextArr = this.amountText.split('各');
-      let numArr = amountTextArr[0].split('.');
+      if(amountTextArr.length <= 1 || amountTextArr[1] === '') {
+        this.$message.error(`智能加数失败：请检查你的公式是否正确！`,1);
+        return;
+      }
+      let pattern1 = /\d+\./;
+      // let pattern2 = /\d+\*/;
+      // let pattern3 = /\d+\+/;
+      // let pattern4 = /\d+\-/;
+      // let pattern5 = /\d+\,/;
+      // let pattern6 = /\d+\，/;
+      let numArr = [];
+      let patternFlag =false;
+      if(pattern1.test(amountTextArr[0]) && !patternFlag) {
+        numArr = amountTextArr[0].split('.');
+        patternFlag = true;
+      }
+      // if(pattern2.test(amountTextArr[0]) && !patternFlag) {
+      //   numArr = amountTextArr[0].split('*');
+      //   patternFlag = true;
+      // }
+      // if(pattern3.test(amountTextArr[0]) && !patternFlag) {
+      //   numArr = amountTextArr[0].split('+');
+      //   patternFlag = true;
+      // }
+      // if(pattern4.test(amountTextArr[0]) && !patternFlag) {
+      //   numArr = amountTextArr[0].split('-');
+      //   patternFlag = true;
+      // }
+      // if(pattern5.test(amountTextArr[0]) && !patternFlag) {
+      //   numArr = amountTextArr[0].split(',');
+      //   patternFlag = true;
+      // }
+      // if(pattern6.test(amountTextArr[0]) && !patternFlag) {
+      //   numArr = amountTextArr[0].split('，');
+      //   patternFlag = true;
+      // }
+      if(!patternFlag) {
+        this.$message.error(`智能加数失败：请检查你的公式是否正确！`,1);
+        return;
+      }
       numArr.forEach(num => {
         const params = {
           action: 'operationAmount',
@@ -439,7 +478,7 @@ export default {
           this.amountText = ''
         });
       })
-      this.$message.success(`智能批量加数成功！`);
+      this.$message.success(`智能批量加数成功！`, 1);
     },
     amountConfirm() {
       console.log('amountConfirm')
@@ -480,6 +519,7 @@ export default {
           this.queryAllSum();
           this.typeAmount = ''
           this.addType = ''
+          this.showType = false
         });
         
       })
