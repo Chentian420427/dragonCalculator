@@ -163,7 +163,7 @@ export default {
         },
       ],
       typeOptions: [
-      {
+        {
           value: "单",
         },
         {
@@ -521,7 +521,7 @@ export default {
           this.addType = ''
           this.showType = false
         });
-        
+
       })
       this.$message.success(`操作成功！`);
     },
