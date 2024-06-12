@@ -94,6 +94,16 @@ class SqlitedbService extends Service {
       , period INTEGER);`
         this.demoSqliteDB.db.exec(create_table_ball_sum);
       }
+      if (!result.find(item => item.name === 'ball_history')) {
+        const create_table_ball_history =
+          `CREATE TABLE ball_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            "desc" TEXT,
+            period INTEGER,
+            create_time TEXT
+          );`
+        this.demoSqliteDB.db.exec(create_table_ball_history);
+      }
 
     }
 
