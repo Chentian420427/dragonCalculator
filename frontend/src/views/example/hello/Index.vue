@@ -63,6 +63,7 @@
         <van-button class="header-button" type="primary" @click="returnInit">重新选择期数</van-button>
         <van-button class="header-button" type="primary" @click="openBatch">智能加数</van-button>
         <van-button class="header-button" type="primary" @click="openType">类别加数</van-button>
+        <van-button class="header-button" type="primary" @click="openHistory">历史记录</van-button>
         <van-button class="header-button" type="danger" @click="deleteAll">清空本期数据</van-button>
 
       </div>
@@ -87,14 +88,19 @@
         <a-textarea v-model:value="amountText" placeholder="例如：10.25.33.11.22各15" />
       </div>
     </van-dialog>
-    <a-modal v-model:visible="showType" title="按类别加数" @ok="typeConfirm" ok-text="确认"
-      cancel-text="取消">
+    <a-modal v-model:visible="showType" title="按类别加数" @ok="typeConfirm" ok-text="确认" cancel-text="取消">
       <div style="padding: 24px">
         <a-select class="header-button" v-model:value="addType" :options="typeOptions" size="large"
           placeholder="请选择需要添加的类别" style="width: 200px;margin-right: 22px;" @change="typeChange">
         </a-select>
         <p style="margin-top: 24px;">{{ typeStr }}</p>
         <a-input prefix="￥" v-model:value="typeAmount" style="width: 200px;" />
+      </div>
+    </a-modal>
+    <a-modal width="800px" v-model:visible="showHistory" title="历史记录" @ok="showHistory = true" ok-text="确认"
+      cancel-text="取消">
+      <div style="padding: 24px">
+        <a-table :dataSource="historyDataList" :columns="columns" />
       </div>
     </a-modal>
   </div>
@@ -120,6 +126,7 @@ export default {
       showDetail: false,
       showBatch: false,
       showType: false,
+      showHistory: false,
       amount: '',
       amountText: "",
       period: "",
@@ -232,7 +239,22 @@ export default {
       greenSum: 0,
       typeStr: '',
       addType: '',
-      typeAmount: ''
+      typeAmount: '',
+      historyDataList: [],
+      columns: [
+        {
+          title: '操作详情',
+          dataIndex: 'desc',
+          key: 'desc',
+          width: 500
+        },
+        {
+          title: '操作时间',
+          dataIndex: 'create_time',
+          key: 'create_time',
+          width: 200
+        },
+      ]
     };
   },
   mounted() {
@@ -332,10 +354,10 @@ export default {
       if (addType === '绿') {
         addType = 'green'
       }
-      if(addType === '单') {
+      if (addType === '单') {
         addType = 1
       }
-      if(addType === '双') {
+      if (addType === '双') {
         addType = 2
       }
       this.typeStr = this.allList.filter(item => item.zodiac === addType).map(item => item.ballNum).join(', ')
@@ -390,6 +412,20 @@ export default {
     openBatch() {
       this.showBatch = true;
     },
+    openHistory() {
+      this.showHistory = true;
+      const params = {
+        action: 'queryHistory',
+        ballDTO: {
+          period: this.period
+        },
+        period: this.period
+      }
+
+      ipc.invoke(ipcApiRoute.ballSqliteOperation, params).then((res) => {
+        this.historyDataList = res.all_list
+      });
+    },
     returnInit() {
       this.$router.push({ name: 'Login' })
     },
@@ -422,48 +458,58 @@ export default {
     },
     zhinengConfirm() {
       let amountTextArr = this.amountText.split('各');
-      if(amountTextArr.length <= 1 || amountTextArr[1] === '') {
-        this.$message.error(`智能加数失败：请检查你的公式是否正确！`,1);
+      if (amountTextArr.length <= 1 || amountTextArr[1] === '') {
+        this.$message.error(`智能加数失败：请检查你的公式是否正确！`, 1);
         return;
       }
       let pattern1 = /\d+\./;
-      // let pattern2 = /\d+\*/;
-      // let pattern3 = /\d+\+/;
-      // let pattern4 = /\d+\-/;
-      // let pattern5 = /\d+\,/;
-      // let pattern6 = /\d+\，/;
+      let pattern2 = /\d+\*/;
+      let pattern3 = /\d+\+/;
+      let pattern4 = /\d+\-/;
+      let pattern5 = /\d+\,/;
+      let pattern6 = /\d+\，/;
       let numArr = [];
-      let patternFlag =false;
-      if(pattern1.test(amountTextArr[0]) && !patternFlag) {
+      let patternFlag = false;
+      if (pattern1.test(amountTextArr[0]) && !patternFlag) {
         numArr = amountTextArr[0].split('.');
         patternFlag = true;
       }
-      // if(pattern2.test(amountTextArr[0]) && !patternFlag) {
-      //   numArr = amountTextArr[0].split('*');
-      //   patternFlag = true;
-      // }
-      // if(pattern3.test(amountTextArr[0]) && !patternFlag) {
-      //   numArr = amountTextArr[0].split('+');
-      //   patternFlag = true;
-      // }
-      // if(pattern4.test(amountTextArr[0]) && !patternFlag) {
-      //   numArr = amountTextArr[0].split('-');
-      //   patternFlag = true;
-      // }
-      // if(pattern5.test(amountTextArr[0]) && !patternFlag) {
-      //   numArr = amountTextArr[0].split(',');
-      //   patternFlag = true;
-      // }
-      // if(pattern6.test(amountTextArr[0]) && !patternFlag) {
-      //   numArr = amountTextArr[0].split('，');
-      //   patternFlag = true;
-      // }
-      if(!patternFlag) {
-        this.$message.error(`智能加数失败：请检查你的公式是否正确！`,1);
+      if (pattern2.test(amountTextArr[0]) && !patternFlag) {
+        numArr = amountTextArr[0].split('*');
+        patternFlag = true;
+      }
+      if (pattern3.test(amountTextArr[0]) && !patternFlag) {
+        numArr = amountTextArr[0].split('+');
+        patternFlag = true;
+      }
+      if (pattern4.test(amountTextArr[0]) && !patternFlag) {
+        numArr = amountTextArr[0].split('-');
+        patternFlag = true;
+      }
+      if (pattern5.test(amountTextArr[0]) && !patternFlag) {
+        numArr = amountTextArr[0].split(',');
+        patternFlag = true;
+      }
+      if (pattern6.test(amountTextArr[0]) && !patternFlag) {
+        numArr = amountTextArr[0].split('，');
+        patternFlag = true;
+      }
+      if (!patternFlag) {
+        this.$message.error(`智能加数失败：请检查你的公式是否正确！`, 1);
         return;
       }
+
+      let desc = numArr.join(',') + ' 加 ' + amountTextArr[1] + '元'
+      let historyParam = {
+        action: 'insertHistory',
+        ballDTO: {
+          desc: desc,
+          period: this.period
+        },
+
+      }
       numArr.forEach(num => {
-        const params = {
+        let params = {
           action: 'operationAmount',
           ballDTO: {
             ballNum: num,
@@ -477,7 +523,11 @@ export default {
           this.queryAllSum();
           this.amountText = ''
         });
+
       })
+      ipc.invoke(ipcApiRoute.ballSqliteOperation, historyParam).then((res) => {
+
+      });
       this.$message.success(`智能批量加数成功！`, 1);
     },
     amountConfirm() {

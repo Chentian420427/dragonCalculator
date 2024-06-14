@@ -131,7 +131,6 @@ class FrameworkController extends Controller {
         ballList = await Services.get('database.sqlitedb').queryAllBall();
 
         ballNumStr = ballList.map(item => item.ball_num).join(',');
-        console.log('ballNumstr', ballNumStr);
         ballSumList = await Services.get('database.sqlitedb').querySumByBallNumAndPeriod(period, ballNumStr);
 
         ballList.forEach(ball => {
@@ -204,7 +203,15 @@ class FrameworkController extends Controller {
       case 'initData':
           
         await Services.get('database.sqlitedb').checkAndCreateTable();
-        break;  
+        break;
+      case 'insertHistory':
+        ballDTO.create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+        await Services.get('database.sqlitedb').insertHistory(ballDTO);
+        break;    
+      case 'queryHistory':
+        let dataList = await Services.get('database.sqlitedb').queryHistory(period);
+        data.all_list = dataList
+        break;     
     }
 
     return data;

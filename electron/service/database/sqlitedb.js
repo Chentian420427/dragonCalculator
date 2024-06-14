@@ -201,6 +201,19 @@ class SqlitedbService extends Service {
   }
 
   /**
+   * 查询历史记录
+   * @returns 
+   */
+  async queryHistory(period = '') {
+    await this.checkAndCreateTable();
+    console.log(period)
+    const queryOperation = this.demoSqliteDB.db.prepare(`SELECT * FROM ball_history where period=? order by create_time desc`);
+    const datas = queryOperation.all(period);
+    //console.log("select users:", users);
+    return datas;
+  }
+
+  /**
    * 操作加减
    * @returns 
    */
@@ -209,6 +222,17 @@ class SqlitedbService extends Service {
     const insert = this.demoSqliteDB.db.prepare(`INSERT INTO ball_sum (ball_num, amount, period) VALUES (@ballNum, @amount, @period)`);
     insert.run(ballDTO);
     //console.log("select users:", users);
+    return true;
+  }
+
+  /**
+   * 插入历史记录
+   * @returns 
+   */
+  async insertHistory(ballDTO) {
+    await this.checkAndCreateTable();
+    const insert = this.demoSqliteDB.db.prepare(`INSERT INTO ball_history (desc, period, create_time) VALUES (@desc, @period, @create_time)`);
+    insert.run(ballDTO);
     return true;
   }
 
