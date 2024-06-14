@@ -398,7 +398,6 @@ export default {
       this.showDetail = true;
     },
     openDialog(param) {
-      console.log(param);
       this.operationBall.ballNum = param.ballNum
       this.operationBall.operation = param.operation
 
@@ -531,9 +530,10 @@ export default {
       this.$message.success(`智能批量加数成功！`, 1);
     },
     amountConfirm() {
-      console.log('amountConfirm')
+      let operationText = ' 加 '
       if (this.operationBall.operation === 'sub') {
         this.operationBall.amount = -this.operationBall.amount
+        operationText = ' 减 '
       }
       const params = {
         action: 'operationAmount',
@@ -549,6 +549,18 @@ export default {
         this.queryAllSum();
         this.operationBall.amount = ''
         this.$message.success(`操作成功！`);
+      });
+      // 历史记录
+      let desc = this.operationBall.ballNum + operationText + this.operationBall.amount + '元'
+      let historyParam = {
+        action: 'insertHistory',
+        ballDTO: {
+          desc: desc,
+          period: this.period
+        },
+      }
+      ipc.invoke(ipcApiRoute.ballSqliteOperation, historyParam).then((res) => {
+
       });
 
     },
