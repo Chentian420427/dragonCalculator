@@ -88,16 +88,23 @@
         <a-textarea v-model:value="amountText" placeholder="例如：10.25.33.11.22各15" />
       </div>
     </van-dialog>
-    <a-modal v-model:visible="showType" title="按类别加数" @ok="typeConfirm" ok-text="确认" cancel-text="取消">
+    <a-modal v-model:visible="showType" title="按类别加数(生肖和类别只能选一种操作)" @ok="typeConfirm" ok-text="确认" cancel-text="取消">
       <div style="padding: 24px">
-        <a-select class="header-button" v-model:value="addType" :options="typeOptions" size="large"
-          placeholder="请选择需要添加的类别" style="width: 200px;margin-right: 22px;" @change="typeChange">
+        <a-select class="header-button" mode="multiple" v-model:value="addType" :options="typeOptions" size="large"
+          placeholder="请选择需要添加的生肖" style="width: 200px;margin-right: 22px;" @change="typeChange">
         </a-select>
+        <a-radio-group style="margin-top: 24px;" v-model:value="colorValue" @change="typeChange2" button-style="solid">
+          <a-radio-button value="红">红</a-radio-button>
+          <a-radio-button value="绿">绿</a-radio-button>
+          <a-radio-button value="蓝">蓝</a-radio-button>
+          <a-radio-button value="单">单</a-radio-button>
+          <a-radio-button value="双">双</a-radio-button>
+        </a-radio-group>
         <p style="margin-top: 24px;">{{ typeStr }}</p>
         <a-input prefix="￥" v-model:value="typeAmount" style="width: 200px;" />
       </div>
     </a-modal>
-    <a-modal width="800px" v-model:visible="showHistory" title="历史记录" @ok="showHistory = true" ok-text="确认"
+    <a-modal width="800px" v-model:visible="showHistory" title="历史记录" @ok="showHistory = false" ok-text="确认"
       cancel-text="取消">
       <div style="padding: 24px">
         <a-table :dataSource="historyDataList" :columns="columns" />
@@ -170,21 +177,7 @@ export default {
         },
       ],
       typeOptions: [
-        {
-          value: "单",
-        },
-        {
-          value: "双",
-        },
-        {
-          value: "红",
-        },
-        {
-          value: "绿",
-        },
-        {
-          value: "蓝",
-        },
+        
         {
           value: "龙",
         },
@@ -238,7 +231,7 @@ export default {
       blueSum: 0,
       greenSum: 0,
       typeStr: '',
-      addType: '',
+      addType: [],
       typeAmount: '',
       historyDataList: [],
       columns: [
@@ -254,7 +247,8 @@ export default {
           key: 'create_time',
           width: 200
         },
-      ]
+      ],
+      colorValue: ''
     };
   },
   mounted() {
@@ -343,8 +337,13 @@ export default {
       })
       this.shengxiaoSum = shengxiaoSum
     },
-    typeChange() {
-      let addType = this.addType
+    typeChange2() {
+      this.typeStr = ''
+      let addType = '';
+      if(this.colorValue) {
+        this.addType = []
+        addType = this.colorValue
+      }
       if (addType === '红') {
         addType = 'red'
       }
@@ -360,13 +359,23 @@ export default {
       if (addType === '双') {
         addType = 2
       }
-      this.typeStr = this.allList.filter(item => item.zodiac === addType).map(item => item.ballNum).join(', ')
       if (this.typeStr.length === 0) {
         this.typeStr = this.allList.filter(item => item.color === addType).map(item => item.ballNum).join(', ')
       }
       if (this.typeStr.length === 0) {
         this.typeStr = this.allList.filter(item => item.ballType === addType).map(item => item.ballNum).join(', ')
       }
+    },
+    typeChange() {
+      let addType = ''
+      this.typeStr = ''
+      if(this.addType) {
+        this.colorValue = ''
+        addType = this.addType
+      }
+      
+      this.typeStr = this.allList.filter(item =>  addType.indexOf(item.zodiac) !== -1).map(item => item.ballNum).join(', ')
+      
     },
     openDetail(ballNum, sum) {
       const params = {
@@ -565,6 +574,10 @@ export default {
 
     },
     typeConfirm() {
+      if(!this.typeStr) {
+        this.$message.error(`请选择需要操作的类别！`);
+        return;
+      }
       let ballNumArr = this.typeStr.split(', ')
       ballNumArr.forEach(ballNum => {
         const params = {
@@ -585,6 +598,18 @@ export default {
         });
 
       })
+
+      let desc = ballNumArr.join(',') + ' 加 ' + this.typeAmount + '元'
+      let historyParam = {
+        action: 'insertHistory',
+        ballDTO: {
+          desc: desc,
+          period: this.period
+        },
+      }
+      ipc.invoke(ipcApiRoute.ballSqliteOperation, historyParam).then((res) => {
+
+      });
       this.$message.success(`操作成功！`);
     },
     shengxiaoSearch() { },
