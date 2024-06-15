@@ -557,7 +557,7 @@ export default {
       ipc.invoke(ipcApiRoute.ballSqliteOperation, params).then((res) => {
         this.queryAllSum();
         this.operationBall.amount = ''
-        this.$message.success(`操作成功！`);
+        this.$message.success(`操作成功！`, 1);
       });
       // 历史记录
 
@@ -576,7 +576,7 @@ export default {
     },
     typeConfirm() {
       if(!this.typeStr) {
-        this.$message.error(`请选择需要操作的类别！`);
+        this.$message.error(`请选择需要操作的类别！`, 1);
         return;
       }
       let ballNumArr = this.typeStr.split(', ')
@@ -611,7 +611,7 @@ export default {
       ipc.invoke(ipcApiRoute.ballSqliteOperation, historyParam).then((res) => {
 
       });
-      this.$message.success(`操作成功！`);
+      this.$message.success(`操作成功！`, 1);
     },
     shengxiaoSearch() { },
 
