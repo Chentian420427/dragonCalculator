@@ -196,6 +196,8 @@ class SqlitedbService extends Service {
     console.log(period)
     const deleteOperation = this.demoSqliteDB.db.prepare(`DELETE FROM ball_sum where period=?`);
     deleteOperation.run(period);
+    const deleteHistory = this.demoSqliteDB.db.prepare(`DELETE FROM ball_history where period=?`);
+    deleteHistory.run(period);
     //console.log("select users:", users);
     return true;
   }
