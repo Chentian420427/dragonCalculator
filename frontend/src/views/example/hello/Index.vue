@@ -539,10 +539,10 @@ export default {
       this.$message.success(`智能批量加数成功！`, 1);
     },
     amountConfirm() {
-      let operationText = ' 加 '
+      let operationText = ' 加 ' + this.operationBall.amount + '元'
       if (this.operationBall.operation === 'sub') {
+        operationText = ' 减 ' + this.operationBall.amount + '元'
         this.operationBall.amount = -this.operationBall.amount
-        operationText = ' 减 '
       }
       const params = {
         action: 'operationAmount',
@@ -560,7 +560,8 @@ export default {
         this.$message.success(`操作成功！`);
       });
       // 历史记录
-      let desc = this.operationBall.ballNum + operationText + this.operationBall.amount + '元'
+
+      let desc = this.operationBall.ballNum + operationText
       let historyParam = {
         action: 'insertHistory',
         ballDTO: {
