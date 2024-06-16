@@ -5,65 +5,13 @@
         <span>{{ period }}期总数：</span>
         <span>{{ allSum }}</span>
       </div>
-      <!-- <div>
-        <a-row>
-          <a-col :span="4">
-            <a-statistic title="单数" v-model:value="danSum">
-              <template #suffix>
-                <span>/ {{ danSum * 47 }}</span>
-              </template>
-            </a-statistic>
-          </a-col>
-          <a-col :span="4">
-            <a-statistic title="双数" v-model:value="shuangSum">
-              <template #suffix>
-                <span>/ {{ shuangSum * 47 }}</span>
-              </template>
-            </a-statistic>
-          </a-col>
-          <a-col :span="4">
-            <a-statistic title="红色" v-model:value="redSum">
-              <template #suffix>
-                <span>/ {{ redSum * 47 }}</span>
-              </template>
-            </a-statistic>
-          </a-col>
-          <a-col :span="4">
-            <a-statistic title="绿色" v-model:value="greenSum">
-              <template #suffix>
-                <span>/ {{ greenSum * 47 }}</span>
-              </template>
-            </a-statistic>
-          </a-col>
-          <a-col :span="4">
-            <a-statistic title="蓝色" v-model:value="blueSum">
-              <template #suffix>
-                <span>/ {{ blueSum * 47 }}</span>
-              </template>
-            </a-statistic>
-          </a-col>
-        </a-row>
-        <a-row style="margin-top: 24px;">
-          <a-col :span="12">
-            <div style="display: flex;align-items: center;">
-              <a-select class="header-button" v-model:value="shengxiaoArr" :options="shengxiaoOptions" mode="multiple"
-                size="large" placeholder="请选择需要统计的生肖" style="width: 200px;margin-right: 22px;"
-                @change="shengxiaoChange">
-              </a-select>
-              <a-statistic title="生肖" v-model:value="shengxiaoSum">
-                <template #suffix>
-                  <span>/ {{ shengxiaoSum * 47 }}</span>
-                </template>
-              </a-statistic>
-            </div>
-          </a-col>
-        </a-row>
-      </div> -->
+
       <div style="display: flex; align-items: center; margin: 28px 0px">
         <van-button class="header-button" type="primary" @click="returnInit">重新选择期数</van-button>
         <van-button class="header-button" type="primary" @click="openBatch">智能加数</van-button>
         <van-button class="header-button" type="primary" @click="openType">类别加数</van-button>
         <van-button class="header-button" type="primary" @click="openHistory">历史记录</van-button>
+        <van-button class="header-button" type="primary" @click="openBatch2">批量添加</van-button>
         <van-button class="header-button" type="danger" @click="deleteAll">清空本期数据</van-button>
 
       </div>
@@ -110,6 +58,12 @@
         <a-table :dataSource="historyDataList" :columns="columns" />
       </div>
     </a-modal>
+    <a-modal v-model:visible="showBatch2" title="数字多选加数" @ok="batchConfirm" ok-text="确认" cancel-text="取消">
+      <div style="padding: 24px">
+        <a-checkbox-group v-model:value="numCheckValue" name="checkboxgroup" :options="numOptions" />
+        <a-input prefix="￥" v-model:value="numCheckAmount" style="width: 200px;margin-top: 24px;" />
+      </div>
+    </a-modal>
   </div>
 
 </template>
@@ -132,12 +86,16 @@ export default {
       showAddSub: false,
       showDetail: false,
       showBatch: false,
+      showBatch2: false,
       showType: false,
       showHistory: false,
       amount: '',
       amountText: "",
       period: "",
+      numCheckValue: "",
+      numOptions: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49"],
       shengxiaoArr: [],
+      numCheckAmount: '',
       shengxiaoOptions: [
         {
           value: "龙",
@@ -177,7 +135,7 @@ export default {
         },
       ],
       typeOptions: [
-        
+
         {
           value: "龙",
         },
@@ -224,12 +182,6 @@ export default {
       },
       detailList: [],
       amountStr: '',
-      danSum: 0,
-      shuangSum: 0,
-      shengxiaoSum: 0,
-      redSum: 0,
-      blueSum: 0,
-      greenSum: 0,
       typeStr: '',
       addType: [],
       typeAmount: '',
@@ -282,45 +234,9 @@ export default {
       ipc.invoke(ipcApiRoute.ballSqliteOperation, params).then((res) => {
         this.allList = res.all_list;
         this.allSum = 0;
-        let danSum = 0;
-        let shuangSum = 0;
-        let shengxiaoSum = 0;
-        let redSum = 0;
-        let greenSum = 0;
-        let blueSum = 0;
         this.allList.forEach(item => {
           this.allSum = parseInt(this.allSum) + parseInt(item.sum);
-
-          if (item.ballType === 1) {
-            danSum = parseInt(danSum) + parseInt(item.sum)
-          }
-          if (item.ballType === 2) {
-            shuangSum = parseInt(shuangSum) + parseInt(item.sum)
-          }
-          if (this.shengxiaoArr.length > 0) {
-            this.shengxiaoArr.forEach(option => {
-              if (option === item.zodiac) {
-                shengxiaoSum = shengxiaoSum + item.sum
-              }
-
-            })
-          }
-          if (item.color === 'blue') {
-            blueSum = parseInt(blueSum) + parseInt(item.sum)
-          }
-          if (item.color === 'green') {
-            greenSum = parseInt(greenSum) + parseInt(item.sum)
-          }
-          if (item.color === 'red') {
-            redSum = parseInt(redSum) + parseInt(item.sum)
-          }
         })
-        this.danSum = danSum
-        this.shuangSum = shuangSum
-        this.shengxiaoSum = shengxiaoSum
-        this.redSum = redSum
-        this.blueSum = blueSum
-        this.greenSum = greenSum
       });
     },
     shengxiaoChange() {
@@ -340,7 +256,7 @@ export default {
     typeChange2() {
       this.typeStr = ''
       let addType = '';
-      if(this.colorValue) {
+      if (this.colorValue) {
         this.addType = []
         addType = this.colorValue
       }
@@ -369,13 +285,13 @@ export default {
     typeChange() {
       let addType = ''
       this.typeStr = ''
-      if(this.addType) {
+      if (this.addType) {
         this.colorValue = ''
         addType = this.addType
       }
-      
-      this.typeStr = this.allList.filter(item =>  addType.indexOf(item.zodiac) !== -1).map(item => item.ballNum).join(', ')
-      
+
+      this.typeStr = this.allList.filter(item => addType.indexOf(item.zodiac) !== -1).map(item => item.ballNum).join(', ')
+
     },
     openDetail(ballNum, sum) {
       const params = {
@@ -419,6 +335,9 @@ export default {
     },
     openBatch() {
       this.showBatch = true;
+    },
+    openBatch2() {
+      this.showBatch2 = true;
     },
     openHistory() {
       this.showHistory = true;
@@ -575,7 +494,7 @@ export default {
 
     },
     typeConfirm() {
-      if(!this.typeStr) {
+      if (!this.typeStr) {
         this.$message.error(`请选择需要操作的类别！`, 1);
         return;
       }
@@ -613,7 +532,43 @@ export default {
       });
       this.$message.success(`操作成功！`, 1);
     },
-    shengxiaoSearch() { },
+    batchConfirm() {
+      if (this.numCheckValue.length === 0 || this.numCheckAmount === '') {
+        this.$message.error(`数字未选择或者金额未填入`, 1);
+        return;
+      }
+      this.numCheckValue.forEach(num => {
+        const params = {
+          action: 'operationAmount',
+          ballDTO: {
+            ballNum: num,
+            amount: this.numCheckAmount,
+            period: this.period
+          },
+
+        }
+
+        ipc.invoke(ipcApiRoute.ballSqliteOperation, params).then((res) => {
+          this.queryAllSum();
+          this.numCheckAmount = ''
+          this.numCheckValue = []
+          this.showBatch2 = false
+        });
+      })
+
+      let desc = this.numCheckValue.join(',') + ' 加 ' + this.numCheckAmount + '元'
+      let historyParam = {
+        action: 'insertHistory',
+        ballDTO: {
+          desc: desc,
+          period: this.period
+        },
+      }
+      ipc.invoke(ipcApiRoute.ballSqliteOperation, historyParam).then((res) => {
+
+      });
+      this.$message.success(`操作成功！`, 1);
+    },
 
   },
 };
