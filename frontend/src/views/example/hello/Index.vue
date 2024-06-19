@@ -60,7 +60,8 @@
     </a-modal>
     <a-modal width="550px" v-model:visible="showBatch2" title="数字多选加数" @ok="batchConfirm" ok-text="确认" cancel-text="取消">
       <div style="padding: 24px">
-        <a-checkbox-group v-model:value="numCheckValue" name="checkboxgroup" :options="numOptions" />
+        <a-checkbox-group style="width: 360px;" v-model:value="numCheckValue" name="checkboxgroup"
+          :options="numOptions" />
         <a-input prefix="￥" v-model:value="numCheckAmount" style="width: 200px;margin-top: 24px;" />
       </div>
     </a-modal>
