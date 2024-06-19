@@ -425,8 +425,8 @@ export default {
         this.$message.error(`智能加数失败：请检查你的公式是否正确！`, 1);
         return;
       }
-      if(isNaN(amountTextArr[1])) {
-        this.$message.error(`智能加数失败：请检查你的公式 各 后面的字符是否正确！`, 1);
+      if (isNaN(amountTextArr[1])) {
+        this.$message.error(`智能加数失败：请检查你的公式 各 后面的字符是否正确！`, 2);
         return;
       }
       let desc = numArr.join(',') + ' 加 ' + amountTextArr[1] + '元'
