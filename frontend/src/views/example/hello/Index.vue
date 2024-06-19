@@ -38,9 +38,9 @@
     </van-dialog>
     <a-modal v-model:visible="showType" title="按类别加数(生肖和类别只能选一种操作)" @ok="typeConfirm" ok-text="确认" cancel-text="取消">
       <div style="padding: 24px">
-        <a-select class="header-button" mode="multiple" v-model:value="addType" :options="typeOptions" size="large"
-          placeholder="请选择需要添加的生肖" style="width: 200px;margin-right: 22px;" @change="typeChange">
-        </a-select>
+
+        <a-checkbox-group v-model:value="addType" name="checkboxgroup2" :options="shengxiaoOptions"
+          @change="typeChange" />
         <a-radio-group style="margin-top: 24px;" v-model:value="colorValue" @change="typeChange2" button-style="solid">
           <a-radio-button value="红">红</a-radio-button>
           <a-radio-button value="绿">绿</a-radio-button>
@@ -96,44 +96,7 @@ export default {
       numOptions: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49"],
       shengxiaoArr: [],
       numCheckAmount: '',
-      shengxiaoOptions: [
-        {
-          value: "龙",
-        },
-        {
-          value: "兔",
-        },
-        {
-          value: "虎",
-        },
-        {
-          value: "牛",
-        },
-        {
-          value: "鼠",
-        },
-        {
-          value: "猪",
-        },
-        {
-          value: "狗",
-        },
-        {
-          value: "鸡",
-        },
-        {
-          value: "猴",
-        },
-        {
-          value: "羊",
-        },
-        {
-          value: "马",
-        },
-        {
-          value: "蛇",
-        },
-      ],
+      shengxiaoOptions: ["龙", "兔", "虎", "牛", "鼠", "猪", "狗", "鸡", "猴", "羊", "马", "蛇"],
       typeOptions: [
 
         {
