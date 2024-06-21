@@ -90,7 +90,7 @@ class SqlitedbService extends Service {
           `CREATE TABLE ball_sum (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         ball_num INTEGER,
-        amount NUMERIC
+        amount INTEGER
       , period INTEGER);`
         this.demoSqliteDB.db.exec(create_table_ball_sum);
       }

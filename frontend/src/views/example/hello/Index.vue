@@ -58,10 +58,25 @@
         <a-table :dataSource="historyDataList" :columns="columns" />
       </div>
     </a-modal>
-    <a-modal width="550px" v-model:visible="showBatch2" title="数字多选加数" @ok="batchConfirm" ok-text="确认" cancel-text="取消">
+    <a-modal width="580px" v-model:visible="showBatch2" title="数字多选加数" @ok="batchConfirm" ok-text="确认" cancel-text="取消">
       <div style="padding: 24px">
-        <a-checkbox-group style="width: 360px;" v-model:value="numCheckValue" name="checkboxgroup"
-          :options="numOptions" />
+        <a-checkbox-group  v-model:value="numCheckValue" name="checkboxgroup">
+          <div>
+            <a-checkbox v-for="(num1, index) in numOptions1" :value="num1">{{ num1 }}</a-checkbox>
+          </div>
+          <div>
+            <a-checkbox v-for="(num1, index) in numOptions2" :value="num1">{{ num1 }}</a-checkbox>
+          </div>
+          <div>
+            <a-checkbox v-for="(num1, index) in numOptions3" :value="num1">{{ num1 }}</a-checkbox>
+          </div>
+          <div>
+            <a-checkbox v-for="(num1, index) in numOptions4" :value="num1">{{ num1 }}</a-checkbox>
+          </div>
+          <div>
+            <a-checkbox v-for="(num1, index) in numOptions5" :value="num1">{{ num1 }}</a-checkbox>
+          </div>
+        </a-checkbox-group>
         <a-input prefix="￥" v-model:value="numCheckAmount" style="width: 200px;margin-top: 24px;" />
       </div>
     </a-modal>
@@ -94,7 +109,11 @@ export default {
       amountText: "",
       period: "",
       numCheckValue: "",
-      numOptions: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49"],
+      numOptions1: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+      numOptions2: ["10", "11", "12", "13", "14", "15", "16", "17", "18", "19"],
+      numOptions3: ["20", "21", "22", "23", "24", "25", "26", "27", "28", "29"],
+      numOptions4: ["30", "31", "32", "33", "34", "35", "36", "37", "38", "39"],
+      numOptions5: ["40", "41", "42", "43", "44", "45", "46", "47", "48", "49"],
       shengxiaoArr: [],
       numCheckAmount: '',
       shengxiaoOptions: ["龙", "兔", "虎", "牛", "鼠", "猪", "狗", "鸡", "猴", "羊", "马", "蛇"],
@@ -390,7 +409,7 @@ export default {
         return;
       }
       if (isNaN(amountTextArr[1])) {
-        this.$message.error(`智能加数失败：请检查你的公式 各 后面的字符是否正确！`, 2);
+        this.$message.error(`智能加数失败：请检查你的公式 各 后面的数字是否正确！`, 2);
         return;
       }
       let desc = numArr.join(',') + ' 加 ' + amountTextArr[1] + '元'
@@ -402,27 +421,35 @@ export default {
         },
 
       }
-      numArr.forEach(num => {
-        let params = {
-          action: 'operationAmount',
-          ballDTO: {
-            ballNum: num,
-            amount: amountTextArr[1],
-            period: this.period
-          },
+      this.amountText = ''
+      const promises = numArr.map(num => {
+        return new Promise((resolveItem, rejectItem) => {
+          let params = {
+            action: 'operationAmount',
+            ballDTO: {
+              ballNum: num,
+              amount: amountTextArr[1],
+              period: this.period
+            },
 
-        }
+          }
 
-        ipc.invoke(ipcApiRoute.ballSqliteOperation, params).then((res) => {
-          this.queryAllSum();
-          this.amountText = ''
-        });
-
+          ipc.invoke(ipcApiRoute.ballSqliteOperation, params).then((res) => {
+            resolveItem()
+          }).catch(e => {
+            rejectItem(new Error('加数异常：请检查你的公式是否正确'))
+          });
+        })
       })
-      ipc.invoke(ipcApiRoute.ballSqliteOperation, historyParam).then((res) => {
 
-      });
-      this.$message.success(`智能批量加数成功！`, 1);
+      Promise.all(promises).then(() => {
+        this.queryAllSum();
+        ipc.invoke(ipcApiRoute.ballSqliteOperation, historyParam).then((res) => {
+          this.$message.success(`智能批量加数成功！`, 1);
+        });
+      })
+
+
     },
     amountConfirm() {
       let operationText = ' 加 ' + this.operationBall.amount + '元'
