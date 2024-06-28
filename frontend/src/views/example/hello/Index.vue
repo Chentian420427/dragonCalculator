@@ -47,6 +47,12 @@
           <a-radio-button value="蓝">蓝</a-radio-button>
           <a-radio-button value="单">单</a-radio-button>
           <a-radio-button value="双">双</a-radio-button>
+          <a-radio-button value="红单">红单</a-radio-button>
+          <a-radio-button value="红双">红双</a-radio-button>
+          <a-radio-button value="绿单">绿单</a-radio-button>
+          <a-radio-button value="绿双">绿双</a-radio-button>
+          <a-radio-button value="蓝单">蓝单</a-radio-button>
+          <a-radio-button value="蓝双">蓝双</a-radio-button>
         </a-radio-group>
         <p style="margin-top: 24px;">{{ typeStr }}</p>
         <a-input prefix="￥" v-model:value="typeAmount" style="width: 200px;" />
@@ -238,32 +244,64 @@ export default {
     },
     typeChange2() {
       this.typeStr = ''
-      let addType = '';
+      let addType = ''
+      let colorSelect = ''
+      let ballTypeSelect = ''
       if (this.colorValue) {
         this.addType = []
         addType = this.colorValue
       }
       if (addType === '红') {
-        addType = 'red'
+        colorSelect = 'red'
       }
       if (addType === '蓝') {
-        addType = 'blue'
+        colorSelect= 'blue'
       }
       if (addType === '绿') {
-        addType = 'green'
+        colorSelect = 'green'
       }
       if (addType === '单') {
-        addType = 1
+        ballTypeSelect = 1
       }
       if (addType === '双') {
-        addType = 2
+        ballTypeSelect = 2
       }
-      if (this.typeStr.length === 0) {
-        this.typeStr = this.allList.filter(item => item.color === addType).map(item => item.ballNum).join(', ')
+      if (addType === '红单') {
+        ballTypeSelect = 1
+        colorSelect = 'red'
       }
-      if (this.typeStr.length === 0) {
-        this.typeStr = this.allList.filter(item => item.ballType === addType).map(item => item.ballNum).join(', ')
+      if (addType === '红双') {
+        ballTypeSelect = 2
+        colorSelect = 'red'
       }
+      if (addType === '绿单') {
+        ballTypeSelect = 1
+        colorSelect = 'green'
+      }
+      if (addType === '绿双') {
+        ballTypeSelect = 2
+        colorSelect = 'green'
+      }
+      if (addType === '蓝单') {
+        ballTypeSelect = 1
+        colorSelect = 'blue'
+      }
+      if (addType === '蓝双') {
+        ballTypeSelect = 2
+        colorSelect = 'blue'
+      }
+      
+      
+      if (colorSelect !== '' && ballTypeSelect === '') {
+        this.typeStr = this.allList.filter(item => item.color === colorSelect).map(item => item.ballNum).join(', ')
+      }
+      if (colorSelect === '' && ballTypeSelect !== '') {
+        this.typeStr = this.allList.filter(item => item.ballType === ballTypeSelect).map(item => item.ballNum).join(', ')
+      }
+      if (colorSelect !== '' && ballTypeSelect !== '') {
+        this.typeStr = this.allList.filter(item => item.ballType === ballTypeSelect && item.color === colorSelect).map(item => item.ballNum).join(', ')
+      }
+
     },
     typeChange() {
       let addType = ''
