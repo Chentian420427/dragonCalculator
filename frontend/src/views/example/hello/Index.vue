@@ -58,9 +58,9 @@
         <a-table :dataSource="historyDataList" :columns="columns" />
       </div>
     </a-modal>
-    <a-modal width="580px" v-model:visible="showBatch2" title="数字多选加数" @ok="batchConfirm" ok-text="确认" cancel-text="取消">
+    <a-modal width="620px" v-model:visible="showBatch2" title="数字多选加数" @ok="batchConfirm" ok-text="确认" cancel-text="取消">
       <div style="padding: 24px">
-        <a-checkbox-group  v-model:value="numCheckValue" name="checkboxgroup">
+        <a-checkbox-group style="width: 550px;" v-model:value="numCheckValue" name="checkboxgroup">
           <div>
             <a-checkbox v-for="(num1, index) in numOptions1" :value="num1">{{ num1 }}</a-checkbox>
           </div>
@@ -367,7 +367,13 @@ export default {
       this.showType = true
     },
     zhinengConfirm() {
-      let amountTextArr = this.amountText.split('各');
+      let amountTextArr = '';
+      if (this.amountText.includes('各数')) {
+        amountTextArr = this.amountText.split('各数');
+      } else {
+        amountTextArr = this.amountText.split('各');
+      }
+
       if (amountTextArr.length <= 1 || amountTextArr[1] === '') {
         this.$message.error(`智能加数失败：请检查你的公式是否正确！`, 1);
         return;
